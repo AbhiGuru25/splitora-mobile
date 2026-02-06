@@ -4,10 +4,26 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function TabLayout() {
     const colorScheme = useColorScheme() ?? 'dark';
     const theme = Colors[colorScheme];
+
+    const fabScale = useSharedValue(1);
+
+    const fabAnimatedStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: fabScale.value }],
+    }));
+
+    const handleFABPress = () => {
+        fabScale.value = withSpring(0.9, { damping: 10 });
+        setTimeout(() => {
+            fabScale.value = withSpring(1, { damping: 10 });
+        }, 100);
+    };
 
     return (
         <>
@@ -72,19 +88,23 @@ export default function TabLayout() {
                     options={{
                         title: 'Add',
                         tabBarLabel: '',
-                        tabBarIcon: ({ focused }) => (
-                            <View style={[styles.fab, {
-                                backgroundColor: theme.primary,
-                                shadowColor: '#38bdf8', // Ice-blue glow
-                            }]}>
+                        tabBarIcon: () => (
+                            <AnimatedTouchable
+                                onPress={handleFABPress}
+                                activeOpacity={0.9}
+                                style={[styles.fab, fabAnimatedStyle, {
+                                    backgroundColor: theme.primary,
+                                    shadowColor: '#38bdf8',
+                                }]}
+                            >
                                 <Ionicons name="add" size={28} color="white" />
-                            </View>
+                            </AnimatedTouchable>
                         ),
                     }}
                     listeners={() => ({
                         tabPress: (e) => {
                             e.preventDefault();
-                            // Add expense modal will open here
+                            handleFABPress();
                         },
                     })}
                 />

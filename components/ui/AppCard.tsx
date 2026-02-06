@@ -22,8 +22,8 @@ export default function AppCard({ children, style, delay = 0, onPress }: AppCard
     const translateY = useSharedValue(20);
 
     useEffect(() => {
-        opacity.value = withDelay(delay, withTiming(1, { duration: 500 }));
-        translateY.value = withDelay(delay, withTiming(0, { duration: 500 }));
+        opacity.value = withDelay(delay, withTiming(1, { duration: 200 })); // Snappier 200ms
+        translateY.value = withDelay(delay, withTiming(0, { duration: 200 }));
     }, [delay]);
 
     const animatedStyle = useAnimatedStyle(() => ({

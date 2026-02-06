@@ -112,7 +112,7 @@ export default function Dashboard() {
                                 <Text style={{ fontSize: 20 }}>💰</Text>
                             </View>
                             <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Total Spent</Text>
-                            <MoneyText amount={totalSpent} style={styles.statValue} />
+                            <MoneyText amount={totalSpent} style={styles.statValue} animate={!loading} />
                             {totalSpent === 0 ? (
                                 <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>No expenses yet</Text>
                             ) : spendingTrend !== null ? (
@@ -134,7 +134,7 @@ export default function Dashboard() {
                                 }
                             ]} delay={200}>
                                 <Text style={[styles.statLabel, { color: theme.textSecondary }]}>You Owe</Text>
-                                <MoneyText amount={-oweAmount} style={styles.subStatValue} showSign />
+                                <MoneyText amount={-oweAmount} style={styles.subStatValue} showSign animate={!loading} />
                                 {oweAmount === 0 && (
                                     <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>All settled</Text>
                                 )}
@@ -152,7 +152,7 @@ export default function Dashboard() {
                                 }
                             ]} delay={300}>
                                 <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Get Back</Text>
-                                <MoneyText amount={getBackAmount} style={styles.subStatValue} showSign />
+                                <MoneyText amount={getBackAmount} style={styles.subStatValue} showSign animate={!loading} />
                                 {getBackAmount === 0 && (
                                     <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>All clear</Text>
                                 )}
