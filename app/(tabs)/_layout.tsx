@@ -1,16 +1,19 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { haptics } from '@/lib/utils/haptics';
+
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function TabLayout() {
     const colorScheme = useColorScheme() ?? 'dark';
     const theme = Colors[colorScheme];
+    const router = useRouter();
 
     const fabScale = useSharedValue(1);
 
@@ -19,10 +22,19 @@ export default function TabLayout() {
     }));
 
     const handleFABPress = () => {
+        // Haptic feedback
+        haptics.impact();
+
+        // Scale animation
         fabScale.value = withSpring(0.9, { damping: 10 });
         setTimeout(() => {
             fabScale.value = withSpring(1, { damping: 10 });
         }, 100);
+
+        // Navigate to add expense screen
+        setTimeout(() => {
+            router.push('/(tabs)/add');
+        }, 150);
     };
 
     return (
