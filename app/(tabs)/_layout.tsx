@@ -1,24 +1,13 @@
 import { Tabs } from 'expo-router';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme() ?? 'dark';
     const theme = Colors[colorScheme];
-
-    // Tab Icons (Placeholder text for now, can replace with icons later)
-    const TabIcon = ({ name, focused, label }: { name: string, focused: boolean, label: string }) => (
-        <View style={styles.tabItem}>
-            <View style={{ opacity: focused ? 1 : 0.5 }}>
-                {/* Using Emoji for simplicity as requested in previous design, can implement icons */}
-                <View style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}>
-                    {/* Text-based icons for now until vector-icons setup is confirmed working perfectly */}
-                </View>
-            </View>
-        </View>
-    );
 
     return (
         <>
@@ -30,18 +19,18 @@ export default function TabLayout() {
                         backgroundColor: theme.surface,
                         borderTopColor: theme.border,
                         borderTopWidth: 1,
-                        height: 70, // Premium height
+                        height: 70,
                         paddingBottom: 10,
                         paddingTop: 10,
                         elevation: 0,
                         shadowOpacity: 0,
                     },
-                    tabBarActiveTintColor: theme.primary,
+                    tabBarActiveTintColor: '#38bdf8', // Ice blue for active
                     tabBarInactiveTintColor: theme.textSecondary,
                     tabBarLabelStyle: {
-                        fontSize: 10,
+                        fontSize: 11,
                         fontWeight: '600',
-                        marginBottom: 4,
+                        marginTop: 4,
                     },
                     tabBarIconStyle: {
                         marginBottom: 0,
@@ -53,7 +42,14 @@ export default function TabLayout() {
                     options={{
                         title: 'Home',
                         tabBarLabel: 'Home',
-                        tabBarIcon: ({ color, size }) => <View style={{ width: size, height: size, backgroundColor: color, borderRadius: size / 2, opacity: 0.2 }} />, // Placeholder circle
+                        tabBarIcon: ({ focused, color }) => (
+                            <Ionicons
+                                name={focused ? 'home' : 'home-outline'}
+                                size={24}
+                                color={color}
+                                style={{ opacity: focused ? 1 : 0.4 }} // 40% opacity when inactive
+                            />
+                        ),
                     }}
                 />
                 <Tabs.Screen
@@ -61,7 +57,14 @@ export default function TabLayout() {
                     options={{
                         title: 'Groups',
                         tabBarLabel: 'Groups',
-                        tabBarIcon: ({ color, size }) => <View style={{ width: size, height: size, backgroundColor: color, borderRadius: size / 2, opacity: 0.2 }} />,
+                        tabBarIcon: ({ focused, color }) => (
+                            <Ionicons
+                                name={focused ? 'people' : 'people-outline'}
+                                size={24}
+                                color={color}
+                                style={{ opacity: focused ? 1 : 0.4 }}
+                            />
+                        ),
                     }}
                 />
                 <Tabs.Screen
@@ -70,29 +73,18 @@ export default function TabLayout() {
                         title: 'Add',
                         tabBarLabel: '',
                         tabBarIcon: ({ focused }) => (
-                            <View style={{
-                                width: 56,
-                                height: 56,
-                                borderRadius: 28,
+                            <View style={[styles.fab, {
                                 backgroundColor: theme.primary,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginBottom: 20, // Elevate above tab bar
-                                shadowColor: theme.primary,
-                                shadowOffset: { width: 0, height: 4 },
-                                shadowOpacity: 0.3,
-                                shadowRadius: 8,
-                                elevation: 4,
-                            }}>
-                                <View style={{ width: 24, height: 2, backgroundColor: 'white', position: 'absolute' }} />
-                                <View style={{ width: 2, height: 24, backgroundColor: 'white', position: 'absolute' }} />
+                                shadowColor: '#38bdf8', // Ice-blue glow
+                            }]}>
+                                <Ionicons name="add" size={28} color="white" />
                             </View>
                         ),
                     }}
                     listeners={() => ({
                         tabPress: (e) => {
                             e.preventDefault();
-                            // Open add modal logic here
+                            // Add expense modal will open here
                         },
                     })}
                 />
@@ -101,7 +93,14 @@ export default function TabLayout() {
                     options={{
                         title: 'Activity',
                         tabBarLabel: 'Activity',
-                        tabBarIcon: ({ color, size }) => <View style={{ width: size, height: size, backgroundColor: color, borderRadius: size / 2, opacity: 0.2 }} />,
+                        tabBarIcon: ({ focused, color }) => (
+                            <Ionicons
+                                name={focused ? 'list' : 'list-outline'}
+                                size={24}
+                                color={color}
+                                style={{ opacity: focused ? 1 : 0.4 }}
+                            />
+                        ),
                     }}
                 />
                 <Tabs.Screen
@@ -109,7 +108,14 @@ export default function TabLayout() {
                     options={{
                         title: 'Profile',
                         tabBarLabel: 'Profile',
-                        tabBarIcon: ({ color, size }) => <View style={{ width: size, height: size, backgroundColor: color, borderRadius: size / 2, opacity: 0.2 }} />,
+                        tabBarIcon: ({ focused, color }) => (
+                            <Ionicons
+                                name={focused ? 'person' : 'person-outline'}
+                                size={24}
+                                color={color}
+                                style={{ opacity: focused ? 1 : 0.4 }}
+                            />
+                        ),
                     }}
                 />
             </Tabs>
@@ -118,8 +124,17 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-    tabItem: {
-        alignItems: 'center',
+    fab: {
+        width: 56,
+        height: 56,
+        borderRadius: 28,
         justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20, // Float above navbar
+        // Ice-blue glow effect
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.4,
+        shadowRadius: 16,
+        elevation: 8,
     },
 });
