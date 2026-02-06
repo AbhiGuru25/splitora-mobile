@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Gradients } from '@/constants/Colors';
 import { useTheme } from '@/lib/context/ThemeContext';
 import { format } from 'date-fns';
+import { Ionicons } from '@expo/vector-icons';
 
 interface GreetingCardProps {
     name: string;
@@ -18,6 +19,9 @@ export default function GreetingCard({ name }: GreetingCardProps) {
     if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
     if (hour >= 17) greeting = 'Good evening';
 
+    // Capitalize first letter of name
+    const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+
     return (
         <LinearGradient
             colors={Gradients.primary}
@@ -25,9 +29,21 @@ export default function GreetingCard({ name }: GreetingCardProps) {
             end={{ x: 1, y: 1 }}
             style={styles.container}
         >
+            {/* Top Row: Avatar and Bell */}
+            <View style={styles.topRow}>
+                <View style={styles.avatar}>
+                    <Text style={styles.avatarText}>{displayName.charAt(0)}</Text>
+                </View>
+
+                <TouchableOpacity style={styles.bellButton}>
+                    <Ionicons name="notifications-outline" size={24} color="white" />
+                </TouchableOpacity>
+            </View>
+
+            {/* Greeting Content */}
             <View style={styles.content}>
                 <Text style={styles.greeting}>{greeting},</Text>
-                <Text style={styles.name}>{name}</Text>
+                <Text style={styles.name}>{displayName}</Text>
                 <Text style={styles.date}>{format(new Date(), 'EEEE, MMMM do')}</Text>
             </View>
 
@@ -40,50 +56,77 @@ export default function GreetingCard({ name }: GreetingCardProps) {
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 20, // Reduced from 24
-        padding: 16, // Reduced from 24
-        height: 180,
-        marginBottom: 16, // Reduced from 24
-        justifyContent: 'center',
+        borderRadius: 16,
+        padding: 16,
+        height: 120, // Reduced from 180px (33% reduction)
+        marginBottom: 16,
+        justifyContent: 'space-between',
         overflow: 'hidden',
         position: 'relative',
+    },
+    topRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        zIndex: 10,
+    },
+    avatar: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    avatarText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    bellButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     content: {
         zIndex: 10,
     },
     greeting: {
         color: 'rgba(255, 255, 255, 0.9)',
-        fontSize: 14, // Reduced from 16
+        fontSize: 13,
         fontWeight: '500',
-        marginBottom: 4,
+        marginBottom: 2,
     },
     name: {
         color: 'white',
-        fontSize: 22, // Reduced from 32
+        fontSize: 32, // Increased for premium feel
         fontWeight: 'bold',
-        marginBottom: 4, // Reduced from 8
+        marginBottom: 4,
+        letterSpacing: -0.5,
     },
     date: {
-        color: 'rgba(255, 255, 255, 0.8)',
-        fontSize: 13, // Reduced from 14
+        color: 'rgba(255, 255, 255, 0.7)',
+        fontSize: 12,
         fontWeight: '500',
-        opacity: 0.7, // Added
     },
     circle: {
         position: 'absolute',
         borderRadius: 999,
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.08)',
     },
     circle1: {
-        width: 200,
-        height: 200,
-        top: -50,
-        right: -50,
-    },
-    circle2: {
         width: 150,
         height: 150,
-        bottom: -30,
-        right: 40,
+        top: -40,
+        right: -40,
+    },
+    circle2: {
+        width: 100,
+        height: 100,
+        bottom: -20,
+        right: 30,
     },
 });

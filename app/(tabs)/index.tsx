@@ -66,10 +66,11 @@ export default function Dashboard() {
     const oweAmount = 0;
     const getBackAmount = 0;
 
-    // Mock trend data (in production, calculate from historical data)
-    const spendingTrend = expenses.length > 0 ? -15 : 0; // 15% less than last month
-    const oweTrend = 0;
-    const getBackTrend = 0;
+    // Only show trends when we have meaningful data
+    const hasEnoughDataForTrends = expenses.length >= 5; // Need at least 5 expenses
+    const spendingTrend = hasEnoughDataForTrends ? -15 : null;
+    const oweTrend = null; // No split expenses yet
+    const getBackTrend = null;
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
@@ -90,38 +91,43 @@ export default function Dashboard() {
                     <GreetingCard name={firstName} />
                 </View>
 
-                {/* 2. Stats Grid (3 Cards) - Show skeletons while loading */}
+                {/* 2. Hierarchical Stats Layout - Total Spent (full-width), then Owe/GetBack (side-by-side) */}
                 {loading ? (
-                    <View style={styles.statsGrid}>
-                        <View style={styles.mainStatCard}>
-                            <SkeletonCard variant="stat" />
-                        </View>
-                        <View style={styles.secondaryStatsCol}>
-                            <View style={styles.subStatCard}>
+                    <View style={styles.statsContainer}>
+                        <SkeletonCard variant="stat" />
+                        <View style={styles.statsRow}>
+                            <View style={{ flex: 1 }}>
                                 <SkeletonCard variant="stat" />
                             </View>
-                            <View style={styles.subStatCard}>
+                            <View style={{ flex: 1 }}>
                                 <SkeletonCard variant="stat" />
                             </View>
                         </View>
                     </View>
                 ) : (
-                    <View style={styles.statsGrid}>
-                        <AppCard style={styles.mainStatCard} delay={100}>
+                    <View style={styles.statsContainer}>
+                        {/* Total Spent - Full Width (Priority) */}
+                        <AppCard style={[styles.fullWidthStatCard, styles.glowCard]} delay={100}>
                             <View style={styles.statIconBadge}>
                                 <Text style={{ fontSize: 20 }}>💰</Text>
                             </View>
                             <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Total Spent</Text>
                             <MoneyText amount={totalSpent} style={styles.statValue} />
-                            <TrendIndicator value={spendingTrend} label="vs last month" />
+                            {totalSpent === 0 ? (
+                                <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>No expenses yet</Text>
+                            ) : spendingTrend !== null ? (
+                                <TrendIndicator value={spendingTrend} label="vs last month" />
+                            ) : null}
                         </AppCard>
 
-                        <View style={styles.secondaryStatsCol}>
+                        {/* You Owe & Get Back - Side by Side (Actions) */}
+                        <View style={styles.statsRow}>
                             <AppCard style={[
-                                styles.subStatCard,
+                                styles.halfStatCard,
+                                styles.glowCard,
                                 {
                                     backgroundColor: activeColorScheme === 'dark'
-                                        ? 'rgba(239, 68, 68, 0.1)'
+                                        ? 'rgba(239, 68, 68, 0.08)'
                                         : '#FEF2F2',
                                     borderLeftWidth: 3,
                                     borderLeftColor: theme.danger,
@@ -129,14 +135,17 @@ export default function Dashboard() {
                             ]} delay={200}>
                                 <Text style={[styles.statLabel, { color: theme.textSecondary }]}>You Owe</Text>
                                 <MoneyText amount={-oweAmount} style={styles.subStatValue} showSign />
-                                <TrendIndicator value={oweTrend} />
+                                {oweAmount === 0 && (
+                                    <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>All settled</Text>
+                                )}
                             </AppCard>
 
                             <AppCard style={[
-                                styles.subStatCard,
+                                styles.halfStatCard,
+                                styles.glowCard,
                                 {
                                     backgroundColor: activeColorScheme === 'dark'
-                                        ? 'rgba(16, 185, 129, 0.1)'
+                                        ? 'rgba(16, 185, 129, 0.08)'
                                         : '#F0FDF4',
                                     borderLeftWidth: 3,
                                     borderLeftColor: theme.success,
@@ -144,7 +153,9 @@ export default function Dashboard() {
                             ]} delay={300}>
                                 <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Get Back</Text>
                                 <MoneyText amount={getBackAmount} style={styles.subStatValue} showSign />
-                                <TrendIndicator value={getBackTrend} />
+                                {getBackAmount === 0 && (
+                                    <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>All clear</Text>
+                                )}
                             </AppCard>
                         </View>
                     </View>
@@ -253,30 +264,43 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 8,
+        marginBottom: 16, // Optimized spacing
     },
-    statsGrid: {
+    statsContainer: {
+        gap: 12,
+        marginBottom: 16,
+    },
+    statsRow: {
         flexDirection: 'row',
         gap: 12,
-        marginBottom: 8,
     },
     chartSection: {
-        marginBottom: 8,
+        marginBottom: 16,
     },
-    mainStatCard: {
-        flex: 1,
-        minHeight: 120, // Reduced from 140
+    fullWidthStatCard: {
+        minHeight: 110,
+        padding: 16,
         justifyContent: 'center',
     },
-    secondaryStatsCol: {
+    halfStatCard: {
         flex: 1,
-        gap: 12,
-    },
-    subStatCard: {
-        flex: 1,
-        padding: 12, // Reduced from 16
+        minHeight: 90,
+        padding: 12,
         justifyContent: 'center',
-        marginBottom: 0,
+    },
+    glowCard: {
+        borderWidth: 1,
+        borderColor: 'rgba(56, 189, 248, 0.15)',
+        shadowColor: '#38bdf8',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        elevation: 8,
+    },
+    emptyHint: {
+        fontSize: 12,
+        marginTop: 4,
+        opacity: 0.7,
     },
     statIconBadge: {
         width: 40, // Reduced from 48

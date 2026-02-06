@@ -30,18 +30,18 @@ export default function EmptyState({
 
     return (
         <View style={styles.container}>
-            {/* Gradient Icon Container */}
+            {/* Compact Icon - Subtle & Professional */}
             <LinearGradient
                 colors={
                     activeColorScheme === 'dark'
-                        ? ['rgba(56, 189, 248, 0.2)', 'rgba(45, 212, 191, 0.1)']
-                        : ['rgba(56, 189, 248, 0.15)', 'rgba(45, 212, 191, 0.08)']
+                        ? ['rgba(56, 189, 248, 0.15)', 'rgba(45, 212, 191, 0.08)']
+                        : ['rgba(56, 189, 248, 0.1)', 'rgba(45, 212, 191, 0.05)']
                 }
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.iconContainer}
             >
-                <Ionicons name={icon} size={72} color={theme.primary} />
+                <Ionicons name={icon} size={48} color={theme.primary} style={{ opacity: 0.8 }} />
             </LinearGradient>
 
             {/* Title */}
@@ -56,11 +56,10 @@ export default function EmptyState({
             {helpText && (
                 <View style={[styles.tipContainer, {
                     backgroundColor: activeColorScheme === 'dark'
-                        ? 'rgba(56, 189, 248, 0.1)'
-                        : theme.cardHighlight,
+                        ? 'rgba(56, 189, 248, 0.08)' : theme.cardHighlight,
                     borderColor: theme.border
                 }]}>
-                    <Ionicons name="bulb-outline" size={16} color={theme.primary} style={styles.tipIcon} />
+                    <Ionicons name="bulb-outline" size={14} color={theme.primary} style={styles.tipIcon} />
                     <Text style={[styles.tipText, { color: theme.textSecondary }]}>
                         {helpText}
                     </Text>
@@ -81,52 +80,53 @@ export default function EmptyState({
 
 const styles = StyleSheet.create({
     container: {
-        padding: Spacing.xl,
+        padding: Spacing.md,
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: 300,
+        minHeight: 200, // Reduced from 300
     },
     iconContainer: {
-        width: 140,
-        height: 140,
-        borderRadius: 70,
+        width: 80, // Reduced from 140px
+        height: 80,
+        borderRadius: 40,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: Spacing.lg,
+        marginBottom: Spacing.md,
     },
     title: {
-        fontSize: Typography.size.headline,
-        fontWeight: Typography.weight.bold,
-        marginBottom: Spacing.sm,
+        fontSize: 18, // Fixed size instead of Typography.size.subheadline
+        fontWeight: Typography.weight.semibold, // Lighter weight
+        marginBottom: Spacing.xs,
         textAlign: 'center',
     },
     subtitle: {
-        fontSize: Typography.size.body,
+        fontSize: Typography.size.caption, // Smaller, more subtle
         textAlign: 'center',
-        marginBottom: Spacing.lg,
-        lineHeight: Typography.size.body * Typography.lineHeight.relaxed,
-        paddingHorizontal: Spacing.md,
+        marginBottom: Spacing.md,
+        lineHeight: Typography.size.caption * 1.4,
+        paddingHorizontal: Spacing.sm,
+        opacity: 0.8,
     },
     tipContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: Spacing.md,
-        paddingVertical: Spacing.sm,
-        borderRadius: 12,
+        paddingHorizontal: Spacing.sm,
+        paddingVertical: Spacing.xs,
+        borderRadius: 8,
         borderWidth: 1,
-        marginBottom: Spacing.lg,
-        maxWidth: 320,
+        marginBottom: Spacing.md,
+        maxWidth: 280,
     },
     tipIcon: {
-        marginRight: Spacing.sm,
+        marginRight: Spacing.xs,
     },
     tipText: {
-        fontSize: Typography.size.caption,
+        fontSize: 11, // Very subtle
         flex: 1,
-        lineHeight: Typography.size.caption * Typography.lineHeight.normal,
+        lineHeight: 14,
     },
     button: {
-        minWidth: 200,
-        marginTop: Spacing.sm,
+        minWidth: 180,
+        marginTop: Spacing.xs,
     }
 });
