@@ -264,29 +264,29 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 0, // Zero gap
+        marginBottom: -4, // Negative - cards overlap
     },
     statsContainer: {
-        gap: 0, // Zero gap - cards touching
-        marginBottom: 0, // Zero gap
+        gap: -2, // Negative - cards overlap
+        marginBottom: -4, // Negative - cards overlap
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 0, // Zero gap - cards touching
+        gap: -2, // Negative - cards overlap sides
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
-        minHeight: 60, // Minimal
-        padding: 4, // Minimal for text readability only
+        minHeight: 55, // Very compact
+        padding: 2, // Absolute minimum
         borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
-        minHeight: 45, // Minimal
-        padding: 2, // Minimal for text only
+        minHeight: 40, // Very compact
+        padding: 1, // Absolute minimum
         borderRadius: 18,
         justifyContent: 'center',
     },
@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 2, // Minimal for text only
+        padding: 1, // Absolute minimum
         borderRadius: 16,
-        marginBottom: 0, // Zero gap - cards touching
+        marginBottom: -2, // Negative - cards overlap
     },
     activityRow: {
         flexDirection: 'row',
