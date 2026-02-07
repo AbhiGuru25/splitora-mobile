@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ padding: 32, paddingBottom: 100 }} // Generous padding for breathing room
+                contentContainerStyle={{ padding: 16, paddingBottom: 80 }} // Tight spacing
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -264,29 +264,29 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 24, // Generous spacing
+        marginBottom: 12, // Tight spacing
     },
     statsContainer: {
-        gap: 20, // Generous spacing between cards
-        marginBottom: 24, // Generous breathing room before next section
+        gap: 10, // Tight spacing between cards
+        marginBottom: 12, // Tight spacing
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 16, // Generous gap between Owe/GetBack cards
+        gap: 10, // Tight gap
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
-        minHeight: 110, // Generous height
-        padding: 20, // Generous padding
+        minHeight: 90, // Compact height
+        padding: 14, // Tight padding
         borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
-        minHeight: 95, // Generous height
-        padding: 18, // Generous padding
+        minHeight: 75, // Compact height
+        padding: 12, // Tight padding
         borderRadius: 18,
         justifyContent: 'center',
     },
@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 18, // Generous padding
+        padding: 12, // Tight padding
         borderRadius: 16,
-        marginBottom: 14, // Generous gap between activity items
+        marginBottom: 10, // Tight gap
     },
     activityRow: {
         flexDirection: 'row',
