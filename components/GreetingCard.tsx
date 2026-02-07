@@ -57,7 +57,7 @@ export default function GreetingCard({ name }: GreetingCardProps) {
 const styles = StyleSheet.create({
     container: {
         borderRadius: 22, // Premium mobile spec
-        padding: 18, // Premium mobile spec
+        padding: 16, // Fintech tight spacing
         // height removed for natural sizing (~120px)
         marginBottom: 0, // Removed, controlled by parent
         justifyContent: 'space-between',

@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 12 }} // Premium mobile spec
+                contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 90 }} // Fintech tight spacing
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -264,13 +264,11 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginTop: 12, // Premium mobile spec
-        marginBottom: 16,
+        marginBottom: 16, // Tight: Header → Total Spent gap
     },
     statsContainer: {
-        marginTop: 16, // Premium spec: Total Spent margin
-        gap: 14, // Premium spec: gap between Total Spent and Owe/GetBack row
-        marginBottom: 22, // Premium spec: space before Recent Activity
+        gap: 12, // Fintech tight: Total Spent → Owe/GetBack
+        marginBottom: 18, // Tight: Stats → Recent Activity
     },
     statsRow: {
         flexDirection: 'row',
@@ -281,15 +279,15 @@ const styles = StyleSheet.create({
     },
     fullWidthStatCard: {
         minHeight: 110,
-        padding: 18, // Premium spec: Total Spent card padding
-        borderRadius: 20, // Premium spec: Total Spent border radius
+        padding: 16, // Fintech tight card padding
+        borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
         minHeight: 90,
-        padding: 16, // Premium spec: Owe/GetBack card padding (tighter than Total Spent)
-        borderRadius: 18, // Premium spec: Owe/GetBack border radius
+        padding: 16, // Fintech tight card padding
+        borderRadius: 18,
         justifyContent: 'center',
     },
     glowCard: {
@@ -354,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 14, // Premium mobile spec
-        borderRadius: 16, // Premium mobile spec
-        marginBottom: 10, // Premium mobile spec
+        padding: 16, // Fintech tight
+        borderRadius: 16,
+        marginBottom: 10,
     },
     activityRow: {
         flexDirection: 'row',
