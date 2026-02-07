@@ -108,7 +108,7 @@ export default function AddExpenseScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 24,
+        padding: 16, // Tighter layout
     },
     header: {
         flexDirection: 'row',

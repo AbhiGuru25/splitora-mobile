@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        padding: 24,
+        padding: 16, // Tighter layout
     },
     iconContainer: {
         alignItems: 'center',

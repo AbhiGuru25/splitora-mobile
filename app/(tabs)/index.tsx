@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ paddingHorizontal: 12 }}
+                contentContainerStyle={{ paddingHorizontal: 16 }} // Reduced margins
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
