@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ paddingHorizontal: 16 }} // Reduced margins
+                contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 12 }} // Premium mobile spec
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -264,28 +264,32 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 16, // Optimized spacing
+        marginTop: 12, // Premium mobile spec
+        marginBottom: 16,
     },
     statsContainer: {
-        gap: 12,
-        marginBottom: 16,
+        marginTop: 16, // Premium spec: Total Spent margin
+        gap: 14, // Premium spec: gap between Total Spent and Owe/GetBack row
+        marginBottom: 22, // Premium spec: space before Recent Activity
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 12,
+        gap: 12, // Premium spec: gap between You Owe and Get Back cards
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
         minHeight: 110,
-        padding: 16,
+        padding: 18, // Premium spec: Total Spent card padding
+        borderRadius: 20, // Premium spec: Total Spent border radius
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
         minHeight: 90,
-        padding: 12,
+        padding: 16, // Premium spec: Owe/GetBack card padding (tighter than Total Spent)
+        borderRadius: 18, // Premium spec: Owe/GetBack border radius
         justifyContent: 'center',
     },
     glowCard: {
@@ -350,7 +354,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 16,
+        padding: 14, // Premium mobile spec
+        borderRadius: 16, // Premium mobile spec
+        marginBottom: 10, // Premium mobile spec
     },
     activityRow: {
         flexDirection: 'row',

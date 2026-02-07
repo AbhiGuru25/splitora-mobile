@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         borderRadius: 28,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20, // Float above navbar
+        marginBottom: 22, // Premium mobile spec: 86px from bottom (64 navbar height + 22 margin)
         // Ice-blue glow effect
         shadowOffset: { width: 0, height: 8 },
         shadowOpacity: 0.4,

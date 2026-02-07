@@ -56,10 +56,10 @@ export default function GreetingCard({ name }: GreetingCardProps) {
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 16,
-        padding: 16,
-        height: 120, // Reduced from 180px (33% reduction)
-        marginBottom: 16,
+        borderRadius: 22, // Premium mobile spec
+        padding: 18, // Premium mobile spec
+        // height removed for natural sizing (~120px)
+        marginBottom: 0, // Removed, controlled by parent
         justifyContent: 'space-between',
         overflow: 'hidden',
         position: 'relative',
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         zIndex: 10,
+        marginBottom: 12, // Space before greeting text
     },
     avatar: {
         width: 40,
@@ -98,13 +99,13 @@ const styles = StyleSheet.create({
         color: 'rgba(255, 255, 255, 0.9)',
         fontSize: 13,
         fontWeight: '500',
-        marginBottom: 2,
+        marginBottom: 6, // Premium mobile spec: gap between texts
     },
     name: {
         color: 'white',
         fontSize: 32, // Increased for premium feel
         fontWeight: 'bold',
-        marginBottom: 4,
+        marginBottom: 6, // Premium mobile spec: gap between texts
         letterSpacing: -0.5,
     },
     date: {
