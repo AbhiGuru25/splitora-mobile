@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ padding: 2, paddingBottom: 40 }} // Ultra-extreme minimal
+                contentContainerStyle={{ padding: 0, paddingBottom: 30 }} // Zero spacing - cards touching
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -264,29 +264,29 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 2, // Ultra-extreme
+        marginBottom: 0, // Zero gap
     },
     statsContainer: {
-        gap: 1, // Ultra-extreme (virtually no gap)
-        marginBottom: 2, // Ultra-extreme
+        gap: 0, // Zero gap - cards touching
+        marginBottom: 0, // Zero gap
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 2, // Ultra-extreme
+        gap: 0, // Zero gap - cards touching
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
-        minHeight: 65, // Ultra-extreme
-        padding: 6, // Ultra-extreme
+        minHeight: 60, // Minimal
+        padding: 4, // Minimal for text readability only
         borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
-        minHeight: 50, // Ultra-extreme
-        padding: 4, // Ultra-extreme
+        minHeight: 45, // Minimal
+        padding: 2, // Minimal for text only
         borderRadius: 18,
         justifyContent: 'center',
     },
@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 4, // Ultra-extreme
+        padding: 2, // Minimal for text only
         borderRadius: 16,
-        marginBottom: 2, // Ultra-extreme
+        marginBottom: 0, // Zero gap - cards touching
     },
     activityRow: {
         flexDirection: 'row',
