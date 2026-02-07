@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ padding: 4, paddingBottom: 50 }} // Extreme minimal - absolute limit
+                contentContainerStyle={{ padding: 2, paddingBottom: 40 }} // Ultra-extreme minimal
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -264,29 +264,29 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 4, // Extreme minimal
+        marginBottom: 2, // Ultra-extreme
     },
     statsContainer: {
-        gap: 2, // Extreme minimal
-        marginBottom: 4, // Extreme minimal
+        gap: 1, // Ultra-extreme (virtually no gap)
+        marginBottom: 2, // Ultra-extreme
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 4, // Extreme minimal
+        gap: 2, // Ultra-extreme
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
-        minHeight: 70, // Extreme minimal
-        padding: 8, // Extreme minimal
+        minHeight: 65, // Ultra-extreme
+        padding: 6, // Ultra-extreme
         borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
-        minHeight: 55, // Extreme minimal
-        padding: 6, // Extreme minimal
+        minHeight: 50, // Ultra-extreme
+        padding: 4, // Ultra-extreme
         borderRadius: 18,
         justifyContent: 'center',
     },
@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 6, // Extreme minimal
+        padding: 4, // Ultra-extreme
         borderRadius: 16,
-        marginBottom: 4, // Extreme minimal
+        marginBottom: 2, // Ultra-extreme
     },
     activityRow: {
         flexDirection: 'row',
