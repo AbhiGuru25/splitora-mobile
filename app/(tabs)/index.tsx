@@ -264,29 +264,29 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 8, // Match profile page ultra-tight spacing
+        marginBottom: 16, // Comfortable spacing like second image
     },
     statsContainer: {
-        gap: 8, // Match profile page: ultra-tight gaps
-        marginBottom: 12, // Match profile page: tight section spacing
+        gap: 12, // Comfortable spacing between cards
+        marginBottom: 16, // Good breathing room before next section
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 12, // Premium spec: gap between You Owe and Get Back cards
+        gap: 12, // Comfortable gap between Owe/GetBack cards
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
-        minHeight: 110,
-        padding: 16, // Fintech tight card padding
+        minHeight: 100, // Comfortable height
+        padding: 16, // Comfortable padding
         borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
-        minHeight: 90,
-        padding: 16, // Fintech tight card padding
+        minHeight: 85, // Comfortable height
+        padding: 14, // Comfortable padding
         borderRadius: 18,
         justifyContent: 'center',
     },
@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 16, // Fintech tight
+        padding: 14, // Comfortable padding
         borderRadius: 16,
-        marginBottom: 10,
+        marginBottom: 10, // Comfortable gap between activity items
     },
     activityRow: {
         flexDirection: 'row',
