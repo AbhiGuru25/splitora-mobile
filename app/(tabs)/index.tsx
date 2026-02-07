@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ padding: 24, paddingBottom: 90 }} // Match profile page spacing
+                contentContainerStyle={{ padding: 32, paddingBottom: 100 }} // Generous padding for breathing room
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -264,29 +264,29 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 16, // Comfortable spacing like second image
+        marginBottom: 24, // Generous spacing
     },
     statsContainer: {
-        gap: 12, // Comfortable spacing between cards
-        marginBottom: 16, // Good breathing room before next section
+        gap: 20, // Generous spacing between cards
+        marginBottom: 24, // Generous breathing room before next section
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 12, // Comfortable gap between Owe/GetBack cards
+        gap: 16, // Generous gap between Owe/GetBack cards
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
-        minHeight: 100, // Comfortable height
-        padding: 16, // Comfortable padding
+        minHeight: 110, // Generous height
+        padding: 20, // Generous padding
         borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
-        minHeight: 85, // Comfortable height
-        padding: 14, // Comfortable padding
+        minHeight: 95, // Generous height
+        padding: 18, // Generous padding
         borderRadius: 18,
         justifyContent: 'center',
     },
@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 14, // Comfortable padding
+        padding: 18, // Generous padding
         borderRadius: 16,
-        marginBottom: 10, // Comfortable gap between activity items
+        marginBottom: 14, // Generous gap between activity items
     },
     activityRow: {
         flexDirection: 'row',
