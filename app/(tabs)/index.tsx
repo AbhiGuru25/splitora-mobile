@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ padding: 8, paddingBottom: 60 }} // Minimal spacing - maximum density
+                contentContainerStyle={{ padding: 4, paddingBottom: 50 }} // Extreme minimal - absolute limit
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -264,29 +264,29 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 6, // Minimal
+        marginBottom: 4, // Extreme minimal
     },
     statsContainer: {
-        gap: 4, // Minimal
-        marginBottom: 6, // Minimal
+        gap: 2, // Extreme minimal
+        marginBottom: 4, // Extreme minimal
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 6, // Minimal
+        gap: 4, // Extreme minimal
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
-        minHeight: 75, // Minimal
-        padding: 10, // Minimal padding
+        minHeight: 70, // Extreme minimal
+        padding: 8, // Extreme minimal
         borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
-        minHeight: 60, // Minimal
-        padding: 8, // Minimal padding
+        minHeight: 55, // Extreme minimal
+        padding: 6, // Extreme minimal
         borderRadius: 18,
         justifyContent: 'center',
     },
@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 8, // Minimal padding
+        padding: 6, // Extreme minimal
         borderRadius: 16,
-        marginBottom: 6, // Minimal gap
+        marginBottom: 4, // Extreme minimal
     },
     activityRow: {
         flexDirection: 'row',
