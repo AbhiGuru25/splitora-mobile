@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 90 }} // Fintech tight spacing
+                contentContainerStyle={{ padding: 24, paddingBottom: 90 }} // Match profile page spacing
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -264,11 +264,11 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     headerRow: {
-        marginBottom: 16, // Tight: Header → Total Spent gap
+        marginBottom: 8, // Match profile page ultra-tight spacing
     },
     statsContainer: {
-        gap: 12, // Fintech tight: Total Spent → Owe/GetBack
-        marginBottom: 18, // Tight: Stats → Recent Activity
+        gap: 8, // Match profile page: ultra-tight gaps
+        marginBottom: 12, // Match profile page: tight section spacing
     },
     statsRow: {
         flexDirection: 'row',
