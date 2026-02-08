@@ -76,7 +76,7 @@ export default function Dashboard() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ padding: 0, paddingBottom: 30 }} // Zero spacing - cards touching
+                contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 80 }} // Edge-to-edge with proper padding
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -261,32 +261,32 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollContent: {
-        padding: 20,
+        flex: 1, // Full width, no extra padding
     },
     headerRow: {
-        marginBottom: -4, // Negative - cards overlap
+        marginBottom: 18, // Section gap
     },
     statsContainer: {
-        gap: -2, // Negative - cards overlap
-        marginBottom: -4, // Negative - cards overlap
+        gap: 12, // Gap between cards
+        marginBottom: 18, // Section gap
     },
     statsRow: {
         flexDirection: 'row',
-        gap: -2, // Negative - cards overlap sides
+        gap: 12, // Gap between Owe/GetBack cards
     },
     chartSection: {
         marginBottom: 16,
     },
     fullWidthStatCard: {
-        minHeight: 55, // Very compact
-        padding: 2, // Absolute minimum
+        minHeight: 100, // Comfortable height
+        padding: 16, // Card padding
         borderRadius: 20,
         justifyContent: 'center',
     },
     halfStatCard: {
         flex: 1,
-        minHeight: 40, // Very compact
-        padding: 1, // Absolute minimum
+        minHeight: 90, // Comfortable height
+        padding: 16, // Card padding
         borderRadius: 18,
         justifyContent: 'center',
     },
@@ -352,9 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     activityCard: {
-        padding: 1, // Absolute minimum
+        padding: 16, // Card padding
         borderRadius: 16,
-        marginBottom: -2, // Negative - cards overlap
+        marginBottom: 12, // Gap between activities
     },
     activityRow: {
         flexDirection: 'row',
