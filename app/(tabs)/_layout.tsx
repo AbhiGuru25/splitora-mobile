@@ -33,7 +33,7 @@ export default function TabLayout() {
 
         // Navigate to add expense screen
         setTimeout(() => {
-            router.push('/(tabs)/add');
+            router.push('/addExpense');
         }, 150);
     };
 
