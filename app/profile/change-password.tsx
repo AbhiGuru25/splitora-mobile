@@ -19,18 +19,25 @@ export default function ChangePasswordScreen() {
     const [loading, setLoading] = useState(false);
 
     const handleUpdatePassword = async () => {
+        console.log('🔴 PASSWORD UPDATE STARTED');
+        console.log('Password:', password ? 'filled' : 'empty');
+        console.log('Confirm Password:', confirmPassword ? 'filled' : 'empty');
+
         if (!password || !confirmPassword) {
-            Alert.alert('Error', 'Please fill in all fields');
+            console.error('❌ Error: Please fill in all fields');
+            alert('Please fill in all fields');
             return;
         }
 
         if (password !== confirmPassword) {
-            Alert.alert('Error', 'Passwords do not match');
+            console.error('❌ Error: Passwords do not match');
+            alert('Passwords do not match');
             return;
         }
 
         if (password.length < 6) {
-            Alert.alert('Error', 'Password must be at least 6 characters');
+            console.error('❌ Error: Password must be at least 6 characters');
+            alert('Password must be at least 6 characters');
             return;
         }
 
@@ -41,14 +48,19 @@ export default function ChangePasswordScreen() {
                 password: password
             });
 
-            if (error) throw error;
+            console.log('✅ Supabase updateUser called');
+            if (error) {
+                console.error('❌ Supabase error:', error);
+                throw error;
+            }
 
-            Alert.alert('Success', 'Password updated successfully', [
-                { text: 'OK', onPress: () => router.back() }
-            ]);
+            console.log('✅ SUCCESS: Password updated!');
+            alert('Password updated successfully!');
+            setTimeout(() => router.back(), 1000);
 
         } catch (error: any) {
-            Alert.alert('Error', error.message || 'Failed to update password');
+            console.error('❌ CATCH ERROR:', error);
+            alert(error.message || 'Failed to update password');
         } finally {
             setLoading(false);
         }
