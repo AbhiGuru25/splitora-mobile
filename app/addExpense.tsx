@@ -40,68 +40,70 @@ export default function AddExpenseScreen() {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.background }]}>
-            <View style={styles.header}>
-                <Text style={[styles.title, { color: theme.text }]}>Add Expense</Text>
-                <TouchableOpacity onPress={() => router.back()}>
-                    <Text style={{ color: theme.primary, fontSize: 16 }}>Cancel</Text>
-                </TouchableOpacity>
-            </View>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+            <View style={[styles.container, { backgroundColor: theme.background }]}>
+                <View style={styles.header}>
+                    <Text style={[styles.title, { color: theme.text }]}>Add Expense</Text>
+                    <TouchableOpacity onPress={() => router.back()}>
+                        <Text style={{ color: theme.primary, fontSize: 16 }}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
 
-            <ScrollView contentContainerStyle={styles.form}>
-                <View style={styles.inputGroup}>
-                    <Text style={[styles.label, { color: theme.textSecondary }]}>Amount</Text>
-                    <View style={[styles.amountInputContainer, { borderBottomColor: theme.primary }]}>
-                        <Text style={[styles.currency, { color: theme.text }]}>₹</Text>
-                        <Input
-                            label=""
-                            value={amount}
-                            onChangeText={setAmount}
-                            keyboardType="numeric"
-                            style={[styles.amountInput, { color: theme.text, backgroundColor: 'transparent', borderWidth: 0 }]}
-                            placeholder="0"
-                        />
+                <ScrollView contentContainerStyle={styles.form}>
+                    <View style={styles.inputGroup}>
+                        <Text style={[styles.label, { color: theme.textSecondary }]}>Amount</Text>
+                        <View style={[styles.amountInputContainer, { borderBottomColor: theme.primary }]}>
+                            <Text style={[styles.currency, { color: theme.text }]}>₹</Text>
+                            <Input
+                                label=""
+                                value={amount}
+                                onChangeText={setAmount}
+                                keyboardType="numeric"
+                                style={[styles.amountInput, { color: theme.text, backgroundColor: 'transparent', borderWidth: 0 }]}
+                                placeholder="0"
+                            />
+                        </View>
                     </View>
-                </View>
 
-                <Input
-                    label="Description"
-                    value={description}
-                    onChangeText={setDescription}
-                    placeholder="What is this for?"
-                />
+                    <Input
+                        label="Description"
+                        value={description}
+                        onChangeText={setDescription}
+                        placeholder="What is this for?"
+                    />
 
-                <Text style={[styles.label, { color: theme.textSecondary, marginBottom: 12 }]}>Category</Text>
-                <View style={styles.categories}>
-                    {categories.map((cat) => (
-                        <TouchableOpacity
-                            key={cat}
-                            style={[
-                                styles.categoryChip,
-                                {
-                                    borderColor: theme.border,
-                                    backgroundColor: category === cat ? theme.primary : theme.surface
-                                }
-                            ]}
-                            onPress={() => {
-                                haptics.selection();
-                                setCategory(cat);
-                            }}
-                        >
-                            <Text style={{ color: category === cat ? 'white' : theme.text }}>{cat}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                    <Text style={[styles.label, { color: theme.textSecondary, marginBottom: 12 }]}>Category</Text>
+                    <View style={styles.categories}>
+                        {categories.map((cat) => (
+                            <TouchableOpacity
+                                key={cat}
+                                style={[
+                                    styles.categoryChip,
+                                    {
+                                        borderColor: theme.border,
+                                        backgroundColor: category === cat ? theme.primary : theme.surface
+                                    }
+                                ]}
+                                onPress={() => {
+                                    haptics.selection();
+                                    setCategory(cat);
+                                }}
+                            >
+                                <Text style={{ color: category === cat ? 'white' : theme.text }}>{cat}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
 
-                <Button
-                    title="Save Expense"
-                    onPress={handleSubmit}
-                    loading={loading}
-                    disabled={!amount || !description || !category}
-                    style={styles.submitButton}
-                />
-            </ScrollView>
-        </View>
+                    <Button
+                        title="Save Expense"
+                        onPress={handleSubmit}
+                        loading={loading}
+                        disabled={!amount || !description || !category}
+                        style={styles.submitButton}
+                    />
+                </ScrollView>
+            </View>
+        </SafeAreaView>
     );
 }
 
