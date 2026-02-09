@@ -121,21 +121,6 @@ export default function TabLayout() {
                     })}
                 />
                 <Tabs.Screen
-                    name="activity"
-                    options={{
-                        title: 'Activity',
-                        tabBarLabel: 'Activity',
-                        tabBarIcon: ({ focused, color }) => (
-                            <Ionicons
-                                name={focused ? 'list' : 'list-outline'}
-                                size={24}
-                                color={color}
-                                style={{ opacity: focused ? 1 : 0.4 }}
-                            />
-                        ),
-                    }}
-                />
-                <Tabs.Screen
                     name="analytics"
                     options={{
                         title: 'Analytics',
