@@ -1,13 +1,20 @@
 import { View } from 'react-native';
+import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Colors } from '../constants/Colors';
 import { AuthProvider } from '../lib/hooks/useAuth';
 import { ThemeProvider, useTheme } from '../lib/context/ThemeContext';
+import { notificationService } from '../lib/notifications';
 
 function RootLayoutContent() {
     const { activeColorScheme } = useTheme();
     const theme = Colors[activeColorScheme];
+
+    // Initialize notification service on app start
+    useEffect(() => {
+        notificationService.initialize();
+    }, []);
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
