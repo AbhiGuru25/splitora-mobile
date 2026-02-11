@@ -74,7 +74,7 @@ export function useBalances(groupId?: string) {
                 .select(`
                     id,
                     paid_by,
-                    amount,
+                    total_amount,
                     expense_splits(user_id, share_amount)
                 `)
                 .eq('group_id', groupId);
@@ -112,7 +112,7 @@ export function useBalances(groupId?: string) {
                 // Add to total_paid for the payer
                 const payer = balanceMap.get(paidBy);
                 if (payer) {
-                    payer.total_paid += parseFloat(expense.amount);
+                    payer.total_paid += parseFloat(expense.total_amount);
                 }
 
                 // Add to total_owed for each person who owes

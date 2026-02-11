@@ -13,7 +13,7 @@ export type SplitExpense = {
     id: string;
     group_id: string;
     paid_by: string;
-    amount: number;
+    total_amount: number;
     description: string;
     category: string;
     date: string;
@@ -69,7 +69,6 @@ export function useSplitExpenses(groupId?: string) {
                 .from('split_expenses')
                 .select(`
                     *,
-                    paid_by_user:profiles!split_expenses_paid_by_fkey(full_name, email),
                     expense_splits(*)
                 `)
                 .eq('group_id', groupId)
@@ -106,7 +105,7 @@ export function useSplitExpenses(groupId?: string) {
                 .insert({
                     group_id: groupId,
                     paid_by: paidBy,
-                    amount,
+                    total_amount: amount,
                     description,
                     category,
                     date: new Date().toISOString(),

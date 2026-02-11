@@ -67,7 +67,7 @@ export default function GroupDetailScreen() {
                 const csvData = data.map((e: any) => ({
                     Date: new Date(e.date).toLocaleDateString(),
                     Description: e.description,
-                    Amount: e.amount,
+                    Amount: e.total_amount,
                     Category: e.category,
                     PaidBy: e.paid_by_user?.full_name || 'Unknown',
                     SplitsCount: e.splits?.length || 0
@@ -256,7 +256,7 @@ export default function GroupDetailScreen() {
                                         </Text>
                                     </View>
 
-                                    <MoneyText amount={expense.amount} style={styles.expenseAmount} showSign={false} />
+                                    <MoneyText amount={expense.total_amount} style={styles.expenseAmount} showSign={false} />
                                 </View>
                             </AppCard>
                         ))
