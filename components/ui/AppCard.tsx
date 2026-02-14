@@ -97,6 +97,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.08,
         shadowRadius: 16,
         elevation: 3,
-        marginBottom: Spacing.md,
+        // No default marginBottom — parent controls spacing via gap
     },
 });

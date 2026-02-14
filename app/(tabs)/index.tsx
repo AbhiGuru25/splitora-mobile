@@ -90,10 +90,10 @@ export default function Dashboard() {
                     <View style={styles.statsContainer}>
                         <SkeletonCard variant="stat" />
                         <View style={styles.statsRow}>
-                            <View style={{ flex: 1 }}>
+                            <View style={styles.halfStatCardWrapper}>
                                 <SkeletonCard variant="stat" />
                             </View>
-                            <View style={{ flex: 1 }}>
+                            <View style={styles.halfStatCardWrapperLast}>
                                 <SkeletonCard variant="stat" />
                             </View>
                         </View>
@@ -117,41 +117,45 @@ export default function Dashboard() {
 
                         {/* You Owe & Get Back — Side by Side with left border */}
                         <View style={styles.statsRow}>
-                            {/* You Owe — dark card + red left border + subtle red tint */}
-                            <AppCard style={[
-                                styles.halfStatCard,
-                                {
-                                    borderLeftWidth: 3,
-                                    borderLeftColor: theme.danger,
-                                    backgroundColor: activeColorScheme === 'dark'
-                                        ? 'rgba(239, 68, 68, 0.05)'
-                                        : 'rgba(239, 68, 68, 0.04)',
-                                }
-                            ]} delay={200}>
-                                <Text style={[styles.statLabel, { color: theme.textSecondary }]}>You Owe</Text>
-                                <MoneyText amount={-oweAmount} style={styles.subStatValue} showSign animate={!loading} />
-                                {oweAmount === 0 && (
-                                    <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>All settled</Text>
-                                )}
-                            </AppCard>
+                            <View style={styles.halfStatCardWrapper}>
+                                {/* You Owe — dark card + red left border + subtle red tint */}
+                                <AppCard style={[
+                                    styles.halfStatCard,
+                                    {
+                                        borderLeftWidth: 3,
+                                        borderLeftColor: theme.danger,
+                                        backgroundColor: activeColorScheme === 'dark'
+                                            ? 'rgba(239, 68, 68, 0.05)'
+                                            : 'rgba(239, 68, 68, 0.04)',
+                                    }
+                                ]} delay={200}>
+                                    <Text style={[styles.statLabel, { color: theme.textSecondary }]}>You Owe</Text>
+                                    <MoneyText amount={-oweAmount} style={styles.subStatValue} showSign animate={!loading} />
+                                    {oweAmount === 0 && (
+                                        <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>All settled</Text>
+                                    )}
+                                </AppCard>
+                            </View>
 
-                            {/* Get Back — dark card + green left border + subtle green tint */}
-                            <AppCard style={[
-                                styles.halfStatCard,
-                                {
-                                    borderLeftWidth: 3,
-                                    borderLeftColor: theme.success,
-                                    backgroundColor: activeColorScheme === 'dark'
-                                        ? 'rgba(16, 185, 129, 0.05)'
-                                        : 'rgba(16, 185, 129, 0.04)',
-                                }
-                            ]} delay={300}>
-                                <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Get Back</Text>
-                                <MoneyText amount={getBackAmount} style={styles.subStatValue} showSign animate={!loading} />
-                                {getBackAmount === 0 && (
-                                    <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>All clear</Text>
-                                )}
-                            </AppCard>
+                            <View style={styles.halfStatCardWrapperLast}>
+                                {/* Get Back — dark card + green left border + subtle green tint */}
+                                <AppCard style={[
+                                    styles.halfStatCard,
+                                    {
+                                        borderLeftWidth: 3,
+                                        borderLeftColor: theme.success,
+                                        backgroundColor: activeColorScheme === 'dark'
+                                            ? 'rgba(16, 185, 129, 0.05)'
+                                            : 'rgba(16, 185, 129, 0.04)',
+                                    }
+                                ]} delay={300}>
+                                    <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Get Back</Text>
+                                    <MoneyText amount={getBackAmount} style={styles.subStatValue} showSign animate={!loading} />
+                                    {getBackAmount === 0 && (
+                                        <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>All clear</Text>
+                                    )}
+                                </AppCard>
+                            </View>
                         </View>
                     </View>
                 )}
@@ -229,16 +233,24 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headerRow: {
-        maxHeight: 110,
         marginBottom: Spacing.lg, // 16px to stats
     },
     statsContainer: {
-        gap: Spacing.md,
-        marginBottom: Spacing.screen, // 20px to next section
+        marginBottom: Spacing.section, // 24px to next section
     },
     statsRow: {
         flexDirection: 'row',
-        gap: Spacing.md,
+        marginTop: Spacing.md,
+    },
+    halfStatCardWrapper: {
+        flex: 1,
+        marginRight: Spacing.md,
+    },
+    halfStatCardWrapperLast: {
+        flex: 1,
+    },
+    fullWidthStatMargin: {
+        marginBottom: 0,
     },
     chartSection: {
         marginBottom: Spacing.lg,

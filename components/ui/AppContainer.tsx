@@ -1,10 +1,9 @@
 /**
  * AppContainer - Consistent screen wrapper with premium background gradient.
- * Use this to wrap all tab screens for consistent padding + depth.
+ * Uses plain View (not SafeAreaView) since tab navigator handles safe area.
  */
 import React from 'react';
-import { StyleSheet, ViewStyle, StyleProp } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@/lib/context/ThemeContext';
 import { BackgroundGradient, Spacing } from '@/constants/Layout';
@@ -27,9 +26,9 @@ export default function AppContainer({ children, style, noPadding }: AppContaine
             start={{ x: 0.5, y: 0 }}
             end={{ x: 0.5, y: 1 }}
         >
-            <SafeAreaView style={[styles.container, !noPadding && styles.padded, style]}>
+            <View style={[styles.container, !noPadding && styles.padded, style]}>
                 {children}
-            </SafeAreaView>
+            </View>
         </LinearGradient>
     );
 }
