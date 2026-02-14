@@ -23,7 +23,7 @@ export default function TabLayout() {
 
     const handleFABPress = () => {
         // Haptic feedback
-        haptics.impact();
+        haptics.medium();
 
         // Scale animation
         fabScale.value = withSpring(0.9, { damping: 10 });
