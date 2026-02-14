@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Gradients } from '@/constants/Colors';
+import { Spacing, Radius, Typography } from '@/constants/Layout';
 import { useTheme } from '@/lib/context/ThemeContext';
 import { useAnalytics } from '@/lib/hooks/useAnalytics';
 import SpendingChart from '@/components/charts/SpendingChart';
 import CategoryChart from '@/components/charts/CategoryChart';
 import InsightCard from '@/components/InsightCard';
 import AppCard from '@/components/ui/AppCard';
+import AppContainer from '@/components/ui/AppContainer';
 
 export default function AnalyticsScreen() {
     const { activeColorScheme } = useTheme();
@@ -25,13 +26,12 @@ export default function AnalyticsScreen() {
     };
 
     const formatCurrency = (amount: number) => {
-        if (amount >= 100000) {
-            return '₹' + (amount / 100000).toFixed(1) + 'L';
-        } else if (amount >= 1000) {
-            return '₹' + (amount / 1000).toFixed(1) + 'k';
-        }
+        if (amount >= 100000) return '₹' + (amount / 100000).toFixed(1) + 'L';
+        if (amount >= 1000) return '₹' + (amount / 1000).toFixed(1) + 'k';
         return '₹' + amount.toFixed(0);
     };
+
+    const hasData = data && data.transactionCount > 0;
 
     const PeriodButton = ({ value, label }: { value: 'week' | 'month' | 'year'; label: string }) => (
         <TouchableOpacity
@@ -52,19 +52,19 @@ export default function AnalyticsScreen() {
 
     if (loading && !data) {
         return (
-            <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+            <AppContainer>
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={theme.primary} />
                     <Text style={[styles.loadingText, { color: theme.textSecondary }]}>
                         Loading analytics...
                     </Text>
                 </View>
-            </SafeAreaView>
+            </AppContainer>
         );
     }
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <AppContainer>
             <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 refreshControl={
@@ -83,7 +83,7 @@ export default function AnalyticsScreen() {
                     </Text>
                 </View>
 
-                {/* Total This Month Card */}
+                {/* Total This Month Card — reduced height */}
                 <LinearGradient
                     colors={Gradients.primary}
                     start={{ x: 0, y: 0 }}
@@ -109,11 +109,11 @@ export default function AnalyticsScreen() {
                     </View>
                 </LinearGradient>
 
-                {/* Period Selector */}
+                {/* Period Selector — Compact segmented control */}
                 <View style={[styles.periodSelector, { backgroundColor: theme.surface }]}>
-                    <PeriodButton value="week" label="Week" />
-                    <PeriodButton value="month" label="Month" />
-                    <PeriodButton value="year" label="Year" />
+                    <PeriodButton value="week" label="W" />
+                    <PeriodButton value="month" label="M" />
+                    <PeriodButton value="year" label="Y" />
                 </View>
 
                 {/* Spending Trend Chart */}
@@ -122,50 +122,75 @@ export default function AnalyticsScreen() {
                         📈 Spending Trend
                     </Text>
                     <AppCard style={styles.chartCard}>
-                        <SpendingChart data={data?.dailySpending || []} />
+                        {hasData ? (
+                            <SpendingChart data={data?.dailySpending || []} />
+                        ) : (
+                            <View style={styles.emptyChart}>
+                                {/* Shimmer skeleton bars */}
+                                <View style={styles.skeletonBars}>
+                                    {[40, 60, 30, 55, 45, 70, 50].map((h, i) => (
+                                        <View
+                                            key={i}
+                                            style={[styles.skeletonBar, {
+                                                height: h,
+                                                backgroundColor: theme.border,
+                                                opacity: 0.4 + (i * 0.05),
+                                            }]}
+                                        />
+                                    ))}
+                                </View>
+                                <Text style={[styles.emptyChartText, { color: theme.textMuted }]}>
+                                    Start adding expenses to see insights
+                                </Text>
+                            </View>
+                        )}
                     </AppCard>
                 </View>
 
                 {/* Insights */}
-                <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, { color: theme.text }]}>
-                        💡 Insights
-                    </Text>
-                    <View style={styles.insightsGrid}>
-                        <InsightCard
-                            icon="trending-up"
-                            title="vs Last Month"
-                            value={`${data?.percentChange.toFixed(0) || 0}%`}
-                            subtext={data?.percentChange && data.percentChange > 0 ? 'increase' : 'decrease'}
-                            trend={data?.percentChange && data.percentChange > 0 ? 'up' : 'down'}
-                        />
-                        <InsightCard
-                            icon="restaurant"
-                            title="Top Category"
-                            value={data?.topCategory || 'None'}
-                            color="#FF6B6B"
-                        />
-                        {data?.biggestExpense && (
+                {hasData && (
+                    <View style={styles.section}>
+                        <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                            💡 Insights
+                        </Text>
+                        <View style={styles.insightsGrid}>
                             <InsightCard
-                                icon="cash"
-                                title="Biggest Expense"
-                                value={formatCurrency(data.biggestExpense.amount)}
-                                subtext={data.biggestExpense.description}
-                                color="#4ECDC4"
+                                icon="trending-up"
+                                title="vs Last Month"
+                                value={`${data?.percentChange.toFixed(0) || 0}%`}
+                                subtext={data?.percentChange && data.percentChange > 0 ? 'increase' : 'decrease'}
+                                trend={data?.percentChange && data.percentChange > 0 ? 'up' : 'down'}
                             />
-                        )}
+                            <InsightCard
+                                icon="restaurant"
+                                title="Top Category"
+                                value={data?.topCategory || 'None'}
+                                color="#FF6B6B"
+                            />
+                            {data?.biggestExpense && (
+                                <InsightCard
+                                    icon="cash"
+                                    title="Biggest Expense"
+                                    value={formatCurrency(data.biggestExpense.amount)}
+                                    subtext={data.biggestExpense.description}
+                                    color="#4ECDC4"
+                                />
+                            )}
+                        </View>
                     </View>
-                </View>
+                )}
 
                 {/* Category Breakdown */}
-                <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, { color: theme.text }]}>
-                        🍩 By Category
-                    </Text>
-                    <AppCard style={styles.chartCard}>
-                        <CategoryChart data={data?.categoryBreakdown || []} />
-                    </AppCard>
-                </View>
+                {hasData && (
+                    <View style={styles.section}>
+                        <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                            🍩 By Category
+                        </Text>
+                        <AppCard style={styles.chartCard}>
+                            <CategoryChart data={data?.categoryBreakdown || []} />
+                        </AppCard>
+                    </View>
+                )}
 
                 {/* Category List */}
                 {data?.categoryBreakdown && data.categoryBreakdown.length > 0 && (
@@ -199,116 +224,131 @@ export default function AnalyticsScreen() {
 
                 <View style={{ height: 100 }} />
             </ScrollView>
-        </SafeAreaView>
+        </AppContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     loadingText: {
-        marginTop: 12,
+        marginTop: Spacing.md,
         fontSize: 16,
     },
     scrollContent: {
-        paddingHorizontal: 16,
-        paddingTop: 16,
+        paddingTop: Spacing.lg,
     },
     header: {
-        marginBottom: 20,
+        marginBottom: Spacing.lg,
     },
     title: {
-        fontSize: 28,
-        fontWeight: 'bold',
+        ...Typography.title,
     },
     subtitle: {
-        fontSize: 16,
-        marginTop: 4,
+        fontSize: 14,
+        marginTop: Spacing.xs,
     },
     totalCard: {
-        padding: 24,
-        borderRadius: 20,
-        marginBottom: 16,
+        padding: Spacing.lg,
+        borderRadius: Radius.card,
+        marginBottom: Spacing.lg,
     },
     totalLabel: {
-        fontSize: 14,
+        fontSize: 13,
         color: 'rgba(255,255,255,0.8)',
         fontWeight: '500',
     },
     totalAmount: {
-        fontSize: 42,
+        fontSize: 36,
         fontWeight: 'bold',
         color: 'white',
-        marginVertical: 8,
+        marginVertical: Spacing.xs,
     },
     totalStats: {
         flexDirection: 'row',
-        marginTop: 8,
+        marginTop: Spacing.sm,
     },
     totalStat: {
         flex: 1,
     },
     totalStatValue: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         color: 'white',
     },
     totalStatLabel: {
-        fontSize: 12,
+        fontSize: 11,
         color: 'rgba(255,255,255,0.7)',
     },
     divider: {
         width: 1,
         backgroundColor: 'rgba(255,255,255,0.3)',
-        marginHorizontal: 16,
+        marginHorizontal: Spacing.lg,
     },
     periodSelector: {
         flexDirection: 'row',
-        padding: 4,
-        borderRadius: 12,
-        marginBottom: 20,
+        padding: 3,
+        borderRadius: Radius.sm,
+        marginBottom: Spacing.section,
     },
     periodButton: {
         flex: 1,
-        paddingVertical: 10,
-        borderRadius: 8,
+        paddingVertical: 7,
+        borderRadius: 7,
         alignItems: 'center',
     },
     periodButtonText: {
-        fontSize: 14,
-        fontWeight: '600',
+        fontSize: 13,
+        fontWeight: '700',
     },
     section: {
-        marginBottom: 24,
+        marginBottom: Spacing.section,
     },
     sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 12,
+        ...Typography.sectionHeader,
+        marginBottom: Spacing.md,
     },
     chartCard: {
-        padding: 16,
+        padding: Spacing.card,
     },
     insightsGrid: {
-        gap: 12,
+        gap: Spacing.md,
+    },
+    emptyChart: {
+        height: 140,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        paddingBottom: Spacing.lg,
+    },
+    skeletonBars: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        gap: 8,
+        height: 80,
+        marginBottom: Spacing.md,
+    },
+    skeletonBar: {
+        width: 24,
+        borderRadius: 4,
+    },
+    emptyChartText: {
+        fontSize: 13,
+        fontWeight: '500',
     },
     categoryRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: 14,
+        paddingVertical: Spacing.card,
         borderBottomWidth: 1,
     },
     categoryInfo: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
+        gap: Spacing.md,
     },
     categoryDot: {
         width: 12,
@@ -316,16 +356,15 @@ const styles = StyleSheet.create({
         borderRadius: 6,
     },
     categoryName: {
-        fontSize: 16,
+        ...Typography.cardTitle,
     },
     categoryValues: {
         alignItems: 'flex-end',
     },
     categoryAmount: {
-        fontSize: 16,
-        fontWeight: '600',
+        ...Typography.cardTitle,
     },
     categoryPercent: {
-        fontSize: 12,
+        ...Typography.caption,
     },
 });

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Colors } from '@/constants/Colors';
+import { Spacing, Radius, Typography } from '@/constants/Layout';
 import { useTheme } from '@/lib/context/ThemeContext';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useGroups, Group } from '@/lib/hooks/useGroups';
 import { Ionicons } from '@expo/vector-icons';
 import AppCard from '@/components/ui/AppCard';
+import AppContainer from '@/components/ui/AppContainer';
 import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SkeletonCard from '@/components/ui/SkeletonCard';
@@ -36,7 +37,8 @@ export default function GroupsScreen() {
             onPress={() => router.push(`/group/${item.id}`)}
         >
             <View style={styles.cardInner}>
-                <View style={styles.cardHeader}>
+                {/* Left: Avatar + Info */}
+                <View style={styles.cardLeft}>
                     <View style={styles.groupIconPlaceholder}>
                         <Text style={styles.groupInitial}>{item.name.charAt(0).toUpperCase()}</Text>
                     </View>
@@ -48,31 +50,35 @@ export default function GroupsScreen() {
                         >
                             {item.name}
                         </Animated.Text>
-                        <Text style={[styles.memberCount, { color: theme.textSecondary }]}>Click to view details</Text>
+                        <Text style={[styles.memberCount, { color: theme.textSecondary }]}>
+                            {(item as any).member_count || 0} members
+                        </Text>
                     </View>
                 </View>
 
-                {/* Mock Balance for Design Showcase */}
+                {/* Right: Balance badge — bigger, bold */}
                 <View style={styles.balanceContainer}>
-                    <View style={[styles.badge, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
-                        <Text style={[styles.badgeText, { color: theme.success }]}>You get ₹500</Text>
-                    </View>
+                    <Text style={[styles.balanceAmount, { color: theme.success }]}>
+                        ₹500
+                    </Text>
+                    <Text style={[styles.balanceLabel, { color: theme.textMuted }]}>
+                        You get
+                    </Text>
                 </View>
 
-                <Ionicons name="chevron-forward" size={20} color={theme.textMuted} style={styles.chevron} />
+                <Ionicons name="chevron-forward" size={18} color={theme.textMuted} />
             </View>
         </AppCard>
     );
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <AppContainer>
             <View style={styles.header}>
                 <Text style={[styles.title, { color: theme.text }]}>Groups</Text>
                 <TouchableOpacity onPress={() => router.push('/groups/create')} style={styles.addButton}>
                     <Ionicons name="add-circle" size={24} color={theme.primary} />
                 </TouchableOpacity>
             </View>
-
 
             {loading ? (
                 <View style={styles.listContent}>
@@ -105,60 +111,55 @@ export default function GroupsScreen() {
                     }
                 />
             )}
-        </SafeAreaView>
+        </AppContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 24,
-        paddingVertical: 16,
+        paddingVertical: Spacing.lg,
     },
     title: {
+        ...Typography.title,
         fontSize: 32,
-        fontWeight: 'bold',
     },
     addButton: {
-        padding: 8,
+        padding: Spacing.sm,
     },
     listContent: {
-        padding: 20,
         paddingTop: 0,
+        paddingBottom: 100,
     },
     card: {
-        marginBottom: 16,
+        marginBottom: Spacing.md,
         padding: 0,
     },
     cardInner: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
-        justifyContent: 'space-between',
+        padding: Spacing.card,
     },
-    cardHeader: {
+    cardLeft: {
         flexDirection: 'row',
         alignItems: 'center',
         flex: 1,
     },
     groupIconPlaceholder: {
-        width: 50,
-        height: 50,
-        borderRadius: 16,
+        width: 46,
+        height: 46,
+        borderRadius: 14,
         backgroundColor: 'rgba(56, 189, 248, 0.1)',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 16,
+        marginRight: Spacing.md,
         borderWidth: 1,
         borderColor: 'rgba(56, 189, 248, 0.2)',
     },
     groupInitial: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#38BDF8',
     },
@@ -167,26 +168,24 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     groupName: {
-        fontSize: 18,
-        fontWeight: '600',
-        marginBottom: 4,
+        ...Typography.cardTitle,
+        fontSize: 17,
+        marginBottom: 2,
     },
     memberCount: {
-        fontSize: 13,
+        ...Typography.caption,
     },
     balanceContainer: {
-        marginHorizontal: 8,
+        alignItems: 'flex-end',
+        marginRight: Spacing.sm,
     },
-    badge: {
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        borderRadius: 8,
+    balanceAmount: {
+        fontSize: 18,
+        fontWeight: '700',
     },
-    badgeText: {
-        fontSize: 12,
-        fontWeight: '600',
+    balanceLabel: {
+        fontSize: 11,
+        fontWeight: '500',
+        marginTop: 1,
     },
-    chevron: {
-        marginLeft: 8,
-    }
 });

@@ -11,10 +11,10 @@ function RootLayoutContent() {
     const { activeColorScheme } = useTheme();
     const theme = Colors[activeColorScheme];
 
-    // Initialize notification service on app start
-    useEffect(() => {
-        notificationService.initialize();
-    }, []);
+    // Don't auto-init notifications on load — only trigger when user enables manually
+    // useEffect(() => {
+    //     notificationService.initialize();
+    // }, []);
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>

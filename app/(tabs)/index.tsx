@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, RefreshControl, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { Spacing, Radius, Typography } from '@/constants/Layout';
 import { useTheme } from '@/lib/context/ThemeContext';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useExpenses } from '@/lib/hooks/useExpenses';
+import AppContainer from '@/components/ui/AppContainer';
 import GreetingCard from '@/components/GreetingCard';
 import AppCard from '@/components/ui/AppCard';
 import MoneyText from '@/components/ui/MoneyText';
@@ -34,7 +35,6 @@ export default function Dashboard() {
         }
     }, [user]);
 
-    // Show success animation briefly when new expense is added
     useEffect(() => {
         const prevExpenseCount = expenses.length;
         if (prevExpenseCount > 0 && expenses.length > prevExpenseCount) {
@@ -60,23 +60,17 @@ export default function Dashboard() {
 
     // Calculate totals
     const totalSpent = expenses.reduce((sum, item) => sum + item.amount, 0);
-
-    // Settlement amounts - currently no split expense logic implemented
-    // These will be 0 until we add group/split functionality
     const oweAmount = 0;
     const getBackAmount = 0;
 
-    // Only show trends when we have meaningful data
-    const hasEnoughDataForTrends = expenses.length >= 5; // Need at least 5 expenses
+    const hasEnoughDataForTrends = expenses.length >= 5;
     const spendingTrend = hasEnoughDataForTrends ? -15 : null;
-    const oweTrend = null; // No split expenses yet
-    const getBackTrend = null;
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <AppContainer>
             <ScrollView
                 style={styles.scrollContent}
-                contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 80 }} // Edge-to-edge with proper padding
+                contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: 80 }}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -86,12 +80,12 @@ export default function Dashboard() {
                     />
                 }
             >
-                {/* 1. Header & Greeting */}
+                {/* 1. Header & Greeting — max 110px */}
                 <View style={styles.headerRow}>
                     <GreetingCard name={firstName} />
                 </View>
 
-                {/* 2. Hierarchical Stats Layout - Total Spent (full-width), then Owe/GetBack (side-by-side) */}
+                {/* 2. Stats Cards — Fintech left-border style */}
                 {loading ? (
                     <View style={styles.statsContainer}>
                         <SkeletonCard variant="stat" />
@@ -106,13 +100,14 @@ export default function Dashboard() {
                     </View>
                 ) : (
                     <View style={styles.statsContainer}>
-                        {/* Total Spent - Full Width (Priority) */}
-                        <AppCard style={[styles.fullWidthStatCard, styles.glowCard]} delay={100}>
+                        {/* Total Spent — dark card + subtle blue glow */}
+                        <AppCard style={[styles.fullWidthStatCard, styles.blueGlowCard]} delay={100}>
                             <View style={styles.statIconBadge}>
                                 <Text style={{ fontSize: 20 }}>💰</Text>
                             </View>
                             <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Total Spent</Text>
                             <MoneyText amount={totalSpent} style={styles.statValue} animate={!loading} />
+                            <Text style={[styles.timeContext, { color: theme.textMuted }]}>This month</Text>
                             {totalSpent === 0 ? (
                                 <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>No expenses yet</Text>
                             ) : spendingTrend !== null ? (
@@ -120,17 +115,17 @@ export default function Dashboard() {
                             ) : null}
                         </AppCard>
 
-                        {/* You Owe & Get Back - Side by Side (Actions) */}
+                        {/* You Owe & Get Back — Side by Side with left border */}
                         <View style={styles.statsRow}>
+                            {/* You Owe — dark card + red left border + subtle red tint */}
                             <AppCard style={[
                                 styles.halfStatCard,
-                                styles.glowCard,
                                 {
-                                    backgroundColor: activeColorScheme === 'dark'
-                                        ? 'rgba(239, 68, 68, 0.08)'
-                                        : '#FEF2F2',
                                     borderLeftWidth: 3,
                                     borderLeftColor: theme.danger,
+                                    backgroundColor: activeColorScheme === 'dark'
+                                        ? 'rgba(239, 68, 68, 0.05)'
+                                        : 'rgba(239, 68, 68, 0.04)',
                                 }
                             ]} delay={200}>
                                 <Text style={[styles.statLabel, { color: theme.textSecondary }]}>You Owe</Text>
@@ -140,15 +135,15 @@ export default function Dashboard() {
                                 )}
                             </AppCard>
 
+                            {/* Get Back — dark card + green left border + subtle green tint */}
                             <AppCard style={[
                                 styles.halfStatCard,
-                                styles.glowCard,
                                 {
-                                    backgroundColor: activeColorScheme === 'dark'
-                                        ? 'rgba(16, 185, 129, 0.08)'
-                                        : '#F0FDF4',
                                     borderLeftWidth: 3,
                                     borderLeftColor: theme.success,
+                                    backgroundColor: activeColorScheme === 'dark'
+                                        ? 'rgba(16, 185, 129, 0.05)'
+                                        : 'rgba(16, 185, 129, 0.04)',
                                 }
                             ]} delay={300}>
                                 <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Get Back</Text>
@@ -169,33 +164,7 @@ export default function Dashboard() {
                     </View>
                 )}
 
-                {/* 3. People to Settle With - Only show if there are actual settlements */}
-                {(oweAmount > 0 || getBackAmount > 0) && (
-                    <>
-                        <SectionHeader
-                            title="People to Settle With"
-                            actionText="See all"
-                            onAction={() => router.push('/settle-up')}
-                        />
-
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalList}>
-                            {/* Mock Data */}
-                            <AppCard style={styles.personCard} delay={400} onPress={() => router.push('/settle-up')}>
-                                <View style={styles.avatarPlaceholder}><Text>S</Text></View>
-                                <Text style={[styles.personName, { color: theme.text }]}>Sneha</Text>
-                                <MoneyText amount={-1000} style={styles.personAmount} />
-                            </AppCard>
-
-                            <AppCard style={styles.personCard} delay={500} onPress={() => router.push('/settle-up')}>
-                                <View style={styles.avatarPlaceholder}><Text>R</Text></View>
-                                <Text style={[styles.personName, { color: theme.text }]}>Rahul</Text>
-                                <MoneyText amount={600} style={styles.personAmount} />
-                            </AppCard>
-                        </ScrollView>
-                    </>
-                )}
-
-                {/* 4. Recent Activity */}
+                {/* Recent Activity */}
                 <SectionHeader
                     title="Recent Activity"
                     actionText="View all"
@@ -249,91 +218,93 @@ export default function Dashboard() {
                     </View>
                 )}
 
-                {/* Bottom Padding for FAB */}
                 <View style={{ height: 100 }} />
             </ScrollView>
-        </SafeAreaView>
+        </AppContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    scrollContent: {
         flex: 1,
     },
-    scrollContent: {
-        flex: 1, // Full width, no extra padding
-    },
     headerRow: {
-        marginBottom: 18, // Section gap
+        maxHeight: 110,
+        marginBottom: Spacing.lg, // 16px to stats
     },
     statsContainer: {
-        gap: 12, // Gap between cards
-        marginBottom: 18, // Section gap
+        gap: Spacing.md,
+        marginBottom: Spacing.screen, // 20px to next section
     },
     statsRow: {
         flexDirection: 'row',
-        gap: 12, // Gap between Owe/GetBack cards
+        gap: Spacing.md,
     },
     chartSection: {
-        marginBottom: 16,
+        marginBottom: Spacing.lg,
     },
     fullWidthStatCard: {
-        minHeight: 100, // Comfortable height
-        padding: 16, // Card padding
-        borderRadius: 20,
+        minHeight: 100,
+        padding: Spacing.card,
+        borderRadius: Radius.card,
         justifyContent: 'center',
     },
-    halfStatCard: {
-        flex: 1,
-        minHeight: 90, // Comfortable height
-        padding: 16, // Card padding
-        borderRadius: 18,
-        justifyContent: 'center',
-    },
-    glowCard: {
+    blueGlowCard: {
         borderWidth: 1,
         borderColor: 'rgba(56, 189, 248, 0.15)',
         shadowColor: '#38bdf8',
         shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 12,
+        shadowOpacity: 0.1,
+        shadowRadius: 16,
         elevation: 8,
     },
+    halfStatCard: {
+        flex: 1,
+        minHeight: 90,
+        padding: Spacing.card,
+        borderRadius: Radius.card,
+        justifyContent: 'center',
+    },
     emptyHint: {
-        fontSize: 12,
-        marginTop: 4,
+        ...Typography.caption,
+        marginTop: Spacing.xs,
         opacity: 0.7,
     },
+    timeContext: {
+        fontSize: 11,
+        fontWeight: '400',
+        marginTop: 2,
+        opacity: 0.6,
+    },
     statIconBadge: {
-        width: 40, // Reduced from 48
-        height: 40,
-        borderRadius: 20,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
         backgroundColor: 'rgba(255,255,255,0.05)',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 8,
+        marginBottom: Spacing.sm,
     },
     statLabel: {
-        fontSize: 12, // Reduced from 14
-        fontWeight: '500',
-        marginBottom: 4,
+        ...Typography.caption,
+        marginBottom: Spacing.xs,
     },
     statValue: {
-        fontSize: 24, // Reduced from 28
+        ...Typography.statLarge,
     },
     subStatValue: {
-        fontSize: 18, // Reduced from 20
+        ...Typography.statSmall,
     },
     horizontalList: {
-        marginHorizontal: -20,
-        paddingHorizontal: 20,
-        marginBottom: 16,
+        marginHorizontal: -Spacing.screen,
+        paddingHorizontal: Spacing.screen,
+        marginBottom: Spacing.lg,
     },
     personCard: {
         width: 140,
-        marginRight: 12,
+        marginRight: Spacing.md,
         alignItems: 'center',
-        padding: 16,
+        padding: Spacing.lg,
     },
     avatarPlaceholder: {
         width: 48,
@@ -342,19 +313,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#334155',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 8,
+        marginBottom: Spacing.sm,
     },
     personName: {
         fontWeight: '600',
-        marginBottom: 4,
+        marginBottom: Spacing.xs,
     },
     personAmount: {
         fontSize: 14,
     },
     activityCard: {
-        padding: 16, // Card padding
-        borderRadius: 16,
-        marginBottom: 12, // Gap between activities
+        padding: Spacing.card,
+        borderRadius: Radius.card,
+        marginBottom: Spacing.md,
     },
     activityRow: {
         flexDirection: 'row',
@@ -363,10 +334,10 @@ const styles = StyleSheet.create({
     categoryIcon: {
         width: 40,
         height: 40,
-        borderRadius: 20,
+        borderRadius: Radius.pill,
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 12,
+        marginRight: Spacing.md,
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,0.1)',
     },
@@ -374,17 +345,16 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     activityTitle: {
-        fontSize: 16,
-        fontWeight: '600',
+        ...Typography.cardTitle,
         marginBottom: 2,
     },
     tagContainer: {
         flexDirection: 'row',
     },
     tagText: {
-        fontSize: 12,
+        ...Typography.caption,
     },
     activityAmount: {
-        fontSize: 16,
+        ...Typography.cardTitle,
     }
 });

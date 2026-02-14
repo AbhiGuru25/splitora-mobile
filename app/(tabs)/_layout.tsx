@@ -7,9 +7,6 @@ import { Ionicons } from '@expo/vector-icons';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { haptics } from '@/lib/utils/haptics';
 
-
-const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
-
 export default function TabLayout() {
     const colorScheme = useColorScheme() ?? 'dark';
     const theme = Colors[colorScheme];
@@ -22,20 +19,35 @@ export default function TabLayout() {
     }));
 
     const handleFABPress = () => {
-        // Haptic feedback
         haptics.medium();
 
-        // Scale animation
         fabScale.value = withSpring(0.9, { damping: 10 });
         setTimeout(() => {
             fabScale.value = withSpring(1, { damping: 10 });
         }, 100);
 
-        // Navigate to add expense screen
         setTimeout(() => {
             router.push('/addExpense');
         }, 150);
     };
+
+    // Tab icon with top indicator line
+    const TabIcon = ({ focused, color, name, outlineName }: {
+        focused: boolean;
+        color: string;
+        name: string;
+        outlineName: string;
+    }) => (
+        <View style={styles.tabIconContainer}>
+            {focused && <View style={[styles.activeIndicator, { backgroundColor: '#38bdf8' }]} />}
+            <Ionicons
+                name={(focused ? name : outlineName) as any}
+                size={22}
+                color={color}
+                style={{ opacity: focused ? 1 : 0.5 }}
+            />
+        </View>
+    );
 
     return (
         <>
@@ -47,18 +59,18 @@ export default function TabLayout() {
                         backgroundColor: theme.surface,
                         borderTopColor: theme.border,
                         borderTopWidth: 1,
-                        height: 70,
-                        paddingBottom: 10,
-                        paddingTop: 10,
+                        height: 64,
+                        paddingBottom: 8,
+                        paddingTop: 6,
                         elevation: 0,
                         shadowOpacity: 0,
                     },
-                    tabBarActiveTintColor: '#38bdf8', // Ice blue for active
+                    tabBarActiveTintColor: '#38bdf8',
                     tabBarInactiveTintColor: theme.textSecondary,
                     tabBarLabelStyle: {
-                        fontSize: 11,
+                        fontSize: 10,
                         fontWeight: '600',
-                        marginTop: 4,
+                        marginTop: 2,
                     },
                     tabBarIconStyle: {
                         marginBottom: 0,
@@ -71,11 +83,11 @@ export default function TabLayout() {
                         title: 'Home',
                         tabBarLabel: 'Home',
                         tabBarIcon: ({ focused, color }) => (
-                            <Ionicons
-                                name={focused ? 'home' : 'home-outline'}
-                                size={24}
+                            <TabIcon
+                                focused={focused}
                                 color={color}
-                                style={{ opacity: focused ? 1 : 0.4 }} // 40% opacity when inactive
+                                name="home"
+                                outlineName="home-outline"
                             />
                         ),
                     }}
@@ -86,11 +98,11 @@ export default function TabLayout() {
                         title: 'Groups',
                         tabBarLabel: 'Groups',
                         tabBarIcon: ({ focused, color }) => (
-                            <Ionicons
-                                name={focused ? 'people' : 'people-outline'}
-                                size={24}
+                            <TabIcon
+                                focused={focused}
                                 color={color}
-                                style={{ opacity: focused ? 1 : 0.4 }}
+                                name="people"
+                                outlineName="people-outline"
                             />
                         ),
                     }}
@@ -121,7 +133,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="activity"
                     options={{
-                        href: null, // Hide from tab bar
+                        href: null,
                     }}
                 />
                 <Tabs.Screen
@@ -130,11 +142,11 @@ export default function TabLayout() {
                         title: 'Analytics',
                         tabBarLabel: 'Analytics',
                         tabBarIcon: ({ focused, color }) => (
-                            <Ionicons
-                                name={focused ? 'stats-chart' : 'stats-chart-outline'}
-                                size={24}
+                            <TabIcon
+                                focused={focused}
                                 color={color}
-                                style={{ opacity: focused ? 1 : 0.4 }}
+                                name="stats-chart"
+                                outlineName="stats-chart-outline"
                             />
                         ),
                     }}
@@ -145,11 +157,11 @@ export default function TabLayout() {
                         title: 'Profile',
                         tabBarLabel: 'Profile',
                         tabBarIcon: ({ focused, color }) => (
-                            <Ionicons
-                                name={focused ? 'person' : 'person-outline'}
-                                size={24}
+                            <TabIcon
+                                focused={focused}
                                 color={color}
-                                style={{ opacity: focused ? 1 : 0.4 }}
+                                name="person"
+                                outlineName="person-outline"
                             />
                         ),
                     }}
@@ -160,19 +172,31 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
+    tabIconContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        width: 32,
+    },
+    activeIndicator: {
+        position: 'absolute',
+        top: -10,
+        width: 20,
+        height: 2,
+        borderRadius: 1,
+    },
     fabWrapper: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     fab: {
-        width: 56,
-        height: 56,
-        borderRadius: 28,
+        width: 52,
+        height: 52,
+        borderRadius: 26,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 22, // Premium mobile spec: 86px from bottom (64 navbar height + 22 margin)
-        // Ice-blue glow effect
+        marginBottom: 18,
         shadowOffset: { width: 0, height: 8 },
         shadowOpacity: 0.4,
         shadowRadius: 16,

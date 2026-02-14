@@ -1,57 +1,42 @@
 /**
  * Haptics Utility
- * Centralized haptic feedback functions
+ * Centralized haptic feedback functions.
+ * All calls wrapped in try-catch for web safety.
  */
 
 import * as Haptics from 'expo-haptics';
+import { Platform } from 'react-native';
+
+const isNative = Platform.OS === 'ios' || Platform.OS === 'android';
+
+const safeHaptic = (fn: () => void) => {
+    if (!isNative) return;
+    try {
+        fn();
+    } catch (e) {
+        // Silently fail on web or unsupported platforms
+    }
+};
 
 export const haptics = {
-    /**
-     * Light tap feedback for button presses
-     */
-    light: () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    },
+    /** Light tap feedback for button presses */
+    light: () => safeHaptic(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)),
 
-    /**
-     * Medium tap feedback for important actions
-     */
-    medium: () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    },
+    /** Medium tap feedback for important actions */
+    medium: () => safeHaptic(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)),
 
-    /**
-     * Heavy tap feedback for critical actions
-     */
-    heavy: () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    },
+    /** Heavy tap feedback for critical actions */
+    heavy: () => safeHaptic(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)),
 
-    /**
-     * Success feedback (e.g., expense added, settlement complete)
-     */
-    success: () => {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    },
+    /** Success feedback (e.g., expense added, settlement complete) */
+    success: () => safeHaptic(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)),
 
-    /**
-     * Warning feedback
-     */
-    warning: () => {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    },
+    /** Warning feedback */
+    warning: () => safeHaptic(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)),
 
-    /**
-     * Error feedback
-     */
-    error: () => {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-    },
+    /** Error feedback */
+    error: () => safeHaptic(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)),
 
-    /**
-     * Selection feedback for toggles and switches
-     */
-    selection: () => {
-        Haptics.selectionAsync();
-    },
+    /** Selection feedback for toggles and switches */
+    selection: () => safeHaptic(() => Haptics.selectionAsync()),
 };

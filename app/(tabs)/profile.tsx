@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Colors } from '@/constants/Colors';
+import { Spacing, Radius, Typography } from '@/constants/Layout';
 import { useTheme } from '@/lib/context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
 import AppCard from '@/components/ui/AppCard';
+import AppContainer from '@/components/ui/AppContainer';
 import SectionHeader from '@/components/ui/SectionHeader';
 
 export default function ProfileScreen() {
@@ -37,7 +38,6 @@ export default function ProfileScreen() {
         );
     };
 
-
     const MenuItem = ({ icon, title, onPress, danger = false }: any) => (
         <AppCard style={styles.menuItem} onPress={onPress}>
             <View style={styles.menuItemInner}>
@@ -51,7 +51,7 @@ export default function ProfileScreen() {
     );
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <AppContainer>
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {/* Header */}
                 <View style={styles.header}>
@@ -61,10 +61,13 @@ export default function ProfileScreen() {
                 {/* User Info Card */}
                 <AppCard style={styles.userCard} delay={100}>
                     <View style={styles.avatarContainer}>
-                        <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
-                            <Text style={styles.avatarText}>
-                                {user?.user_metadata?.full_name?.charAt(0).toUpperCase() || 'U'}
-                            </Text>
+                        {/* Avatar with blue glow ring */}
+                        <View style={[styles.avatarGlowRing]}>
+                            <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
+                                <Text style={styles.avatarText}>
+                                    {user?.user_metadata?.full_name?.charAt(0).toUpperCase() || 'U'}
+                                </Text>
+                            </View>
                         </View>
                     </View>
                     <Text style={[styles.userName, { color: theme.text }]}>
@@ -74,6 +77,9 @@ export default function ProfileScreen() {
                         {user?.email}
                     </Text>
                 </AppCard>
+
+                {/* Divider after profile card */}
+                <View style={[styles.sectionDivider, { backgroundColor: theme.border }]} />
 
                 {/* Account Section */}
                 <SectionHeader title="Account" />
@@ -114,91 +120,111 @@ export default function ProfileScreen() {
                     onPress={() => router.push('/profile/help')}
                 />
 
-                {/* Sign Out */}
-                <View style={{ marginTop: 24 }}>
-                    <MenuItem
-                        icon="log-out-outline"
-                        title="Sign Out"
+                {/* Sign Out — red text only, not full card red */}
+                <View style={{ marginTop: Spacing.section }}>
+                    <TouchableOpacity
                         onPress={handleSignOut}
-                        danger={true}
-                    />
+                        style={[styles.signOutButton, { borderColor: theme.border }]}
+                        activeOpacity={0.7}
+                    >
+                        <Ionicons name="log-out-outline" size={20} color={theme.danger} />
+                        <Text style={[styles.signOutText, { color: theme.danger }]}>Sign Out</Text>
+                    </TouchableOpacity>
                 </View>
 
-                {/* Bottom Spacing */}
                 <View style={{ height: 100 }} />
             </ScrollView>
-        </SafeAreaView>
+        </AppContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     scrollContent: {
-        padding: 20,
+        paddingTop: Spacing.lg,
     },
     header: {
-        paddingHorizontal: 4,
-        paddingVertical: 16,
-        marginBottom: 8,
+        paddingVertical: Spacing.lg,
+        marginBottom: Spacing.sm,
     },
     title: {
+        ...Typography.title,
         fontSize: 32,
-        fontWeight: 'bold',
     },
     userCard: {
         alignItems: 'center',
-        padding: 32,
-        marginBottom: 8,
+        padding: Spacing.section,
+        marginBottom: Spacing.sm,
     },
     avatarContainer: {
-        marginBottom: 16,
+        marginBottom: Spacing.lg,
     },
-    avatar: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
+    avatarGlowRing: {
+        padding: 4,
+        borderRadius: 48,
+        borderWidth: 2,
+        borderColor: 'rgba(56, 189, 248, 0.4)',
         shadowColor: '#38BDF8',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.35,
+        shadowRadius: 12,
         elevation: 8,
     },
+    avatar: {
+        width: 76,
+        height: 76,
+        borderRadius: 38,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     avatarText: {
-        fontSize: 32,
+        fontSize: 30,
         fontWeight: 'bold',
         color: 'white',
     },
     userName: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 'bold',
-        marginBottom: 4,
+        marginBottom: Spacing.xs,
     },
     userEmail: {
         fontSize: 14,
     },
+    sectionDivider: {
+        height: 1,
+        marginVertical: Spacing.lg,
+        opacity: 0.5,
+    },
     menuItem: {
-        marginBottom: 12,
+        marginBottom: Spacing.sm,
         padding: 0,
     },
     menuItemInner: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
+        padding: Spacing.card,
     },
     menuIcon: {
-        width: 40,
-        height: 40,
-        borderRadius: 10,
+        width: 38,
+        height: 38,
+        borderRadius: Radius.sm,
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 16,
+        marginRight: Spacing.lg,
     },
     menuTitle: {
         flex: 1,
+        ...Typography.cardTitle,
+    },
+    signOutButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: Spacing.card,
+        borderRadius: Radius.card,
+        borderWidth: 1,
+        gap: Spacing.sm,
+    },
+    signOutText: {
         fontSize: 16,
         fontWeight: '600',
     },
