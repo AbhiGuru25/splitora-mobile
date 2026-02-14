@@ -100,25 +100,23 @@ export default function TabLayout() {
                     options={{
                         title: 'Add',
                         tabBarLabel: '',
-                        tabBarIcon: () => (
-                            <AnimatedTouchable
+                        tabBarButton: () => (
+                            <TouchableOpacity
                                 onPress={handleFABPress}
                                 activeOpacity={0.9}
-                                style={[styles.fab, fabAnimatedStyle, {
-                                    backgroundColor: theme.primary,
-                                    shadowColor: '#38bdf8',
-                                }]}
+                                style={styles.fabWrapper}
                             >
-                                <Ionicons name="add" size={28} color="white" />
-                            </AnimatedTouchable>
+                                <Animated.View
+                                    style={[styles.fab, fabAnimatedStyle, {
+                                        backgroundColor: theme.primary,
+                                        shadowColor: '#38bdf8',
+                                    }]}
+                                >
+                                    <Ionicons name="add" size={28} color="white" />
+                                </Animated.View>
+                            </TouchableOpacity>
                         ),
                     }}
-                    listeners={() => ({
-                        tabPress: (e) => {
-                            e.preventDefault();
-                            handleFABPress();
-                        },
-                    })}
                 />
                 <Tabs.Screen
                     name="activity"
@@ -162,6 +160,11 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
+    fabWrapper: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     fab: {
         width: 56,
         height: 56,
