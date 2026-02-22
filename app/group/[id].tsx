@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, Alert, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
@@ -12,6 +12,7 @@ import Button from '@/components/ui/Button';
 import EmptyState from '@/components/ui/EmptyState';
 import { useSplitExpenses } from '@/lib/hooks/useSplitExpenses';
 import { useBalances } from '@/lib/hooks/useBalances';
+import { useGroupInvite } from '@/lib/hooks/useGroupInvite';
 import { supabase } from '@/lib/supabase';
 import { exportToCSV } from '@/lib/utils/exportData';
 import { format } from 'date-fns';
@@ -30,6 +31,8 @@ export default function GroupDetailScreen() {
     // @ts-ignore - Reanimated types issue
     const { balances, refreshBalances, loading: balancesLoading } = useBalances(id as string);
     const [exporting, setExporting] = useState(false);
+    const [inviteLoading, setInviteLoading] = useState(false);
+    const { generateInviteLink } = useGroupInvite();
 
     useEffect(() => {
         fetchGroupName();
@@ -92,34 +95,90 @@ export default function GroupDetailScreen() {
         return '💸';
     };
 
+    const handleDeleteGroup = async () => {
+        try {
+            const { error } = await supabase
+                .from('groups')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                console.error('Delete group error:', error);
+                throw error;
+            }
+
+            // Navigate back to groups list
+            if (Platform.OS === 'web') {
+                router.replace('/(tabs)/groups');
+            } else {
+                router.dismissAll();
+                router.replace('/(tabs)/groups');
+            }
+        } catch (error: any) {
+            const msg = error.message || 'Failed to delete group';
+            if (Platform.OS === 'web') {
+                window.alert(msg);
+            } else {
+                Alert.alert('Error', msg);
+            }
+        }
+    };
+
     const confirmDelete = () => {
-        Alert.alert(
-            'Delete Group',
-            'Are you sure you want to delete this group? This action cannot be undone.',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Delete',
-                    style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            const { error } = await supabase
-                                .from('groups')
-                                .delete()
-                                .eq('id', id);
-
-                            if (error) throw error;
-
-                            // Navigate back to groups list
-                            router.dismissAll();
-                            router.replace('/(tabs)/groups');
-                        } catch (error: any) {
-                            Alert.alert('Error', error.message || 'Failed to delete group');
-                        }
+        if (Platform.OS === 'web') {
+            const confirmed = window.confirm('Are you sure you want to delete this group? This action cannot be undone.');
+            if (confirmed) {
+                handleDeleteGroup();
+            }
+        } else {
+            Alert.alert(
+                'Delete Group',
+                'Are you sure you want to delete this group? This action cannot be undone.',
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    {
+                        text: 'Delete',
+                        style: 'destructive',
+                        onPress: handleDeleteGroup,
                     }
+                ]
+            );
+        }
+    };
+
+    const handleShare = async () => {
+        setInviteLoading(true);
+        try {
+            const result = await generateInviteLink(id as string);
+            if (!result) {
+                const msg = 'Failed to generate invite link.';
+                Platform.OS === 'web' ? window.alert(msg) : Alert.alert('Error', msg);
+                return;
+            }
+
+            const { code, url } = result;
+            const message = `Join me on "${groupName}" in Splitora!\n\nUse code: ${code}\nOr open: ${url}`;
+
+            if (Platform.OS === 'web') {
+                if (typeof navigator !== 'undefined' && navigator.share) {
+                    // Mobile web share sheet
+                    await navigator.share({ title: `Join ${groupName} on Splitora`, text: message, url });
+                } else {
+                    // Desktop web — copy to clipboard
+                    await navigator.clipboard.writeText(url);
+                    window.alert(`Invite link copied!\n\n${url}\n\nCode: ${code}`);
                 }
-            ]
-        );
+            } else {
+                const { Share } = require('react-native');
+                await Share.share({ message, title: `Join ${groupName} on Splitora` });
+            }
+        } catch (error: any) {
+            if (error?.name !== 'AbortError') {
+                console.error('Share error:', error);
+            }
+        } finally {
+            setInviteLoading(false);
+        }
     };
 
     return (
@@ -141,8 +200,8 @@ export default function GroupDetailScreen() {
                     <TouchableOpacity onPress={handleExport} disabled={exporting}>
                         <Ionicons name="download-outline" size={24} color={exporting ? theme.textMuted : theme.text} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => router.push(`/group/add-member?groupId=${id}`)}>
-                        <Ionicons name="person-add-outline" size={24} color={theme.text} />
+                    <TouchableOpacity onPress={handleShare} disabled={inviteLoading}>
+                        <Ionicons name="share-social-outline" size={24} color={inviteLoading ? theme.textMuted : theme.text} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => router.push(`/settle/${id}`)}>
                         <Ionicons name="card-outline" size={24} color={theme.text} />

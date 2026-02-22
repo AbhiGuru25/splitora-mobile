@@ -6,6 +6,7 @@ import { Spacing, Radius, Typography } from '@/constants/Layout';
 import { useTheme } from '@/lib/context/ThemeContext';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useExpenses } from '@/lib/hooks/useExpenses';
+import { useUserBalanceSummary } from '@/lib/hooks/useUserBalanceSummary';
 import AppContainer from '@/components/ui/AppContainer';
 import GreetingCard from '@/components/GreetingCard';
 import AppCard from '@/components/ui/AppCard';
@@ -24,6 +25,7 @@ export default function Dashboard() {
     const theme = Colors[activeColorScheme];
     const { user } = useAuth();
     const { expenses, loading, refreshExpenses, deleteExpense } = useExpenses();
+    const { totalOwe, totalGetBack, loading: balanceLoading, refreshSummary } = useUserBalanceSummary();
     const router = useRouter();
     const [refreshing, setRefreshing] = useState(false);
     const [firstName, setFirstName] = useState('User');
@@ -45,7 +47,7 @@ export default function Dashboard() {
 
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
-        await refreshExpenses();
+        await Promise.all([refreshExpenses(), refreshSummary()]);
         setRefreshing(false);
     }, []);
 
@@ -60,8 +62,8 @@ export default function Dashboard() {
 
     // Calculate totals
     const totalSpent = expenses.reduce((sum, item) => sum + item.amount, 0);
-    const oweAmount = 0;
-    const getBackAmount = 0;
+    const oweAmount = totalOwe;
+    const getBackAmount = totalGetBack;
 
     const hasEnoughDataForTrends = expenses.length >= 5;
     const spendingTrend = hasEnoughDataForTrends ? -15 : null;

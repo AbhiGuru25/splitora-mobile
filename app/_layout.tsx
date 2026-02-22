@@ -51,6 +51,13 @@ function RootLayoutContent() {
                         contentStyle: { backgroundColor: 'transparent' }
                     }}
                 />
+                <Stack.Screen
+                    name="join"
+                    options={{
+                        animation: 'fade',
+                        presentation: 'card',
+                    }}
+                />
             </Stack>
         </View>
     );

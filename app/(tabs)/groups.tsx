@@ -30,46 +30,61 @@ export default function GroupsScreen() {
         setRefreshing(false);
     }, []);
 
-    const renderGroupItem = ({ item, index }: { item: Group; index: number }) => (
-        <AppCard
-            style={styles.card}
-            delay={index * 100}
-            onPress={() => router.push(`/group/${item.id}`)}
-        >
-            <View style={styles.cardInner}>
-                {/* Left: Avatar + Info */}
-                <View style={styles.cardLeft}>
-                    <View style={styles.groupIconPlaceholder}>
-                        <Text style={styles.groupInitial}>{item.name.charAt(0).toUpperCase()}</Text>
+    const renderGroupItem = ({ item, index }: { item: Group; index: number }) => {
+        const balance = item.user_balance || 0;
+        const balanceColor = balance > 0.01 ? theme.success : balance < -0.01 ? theme.danger : theme.textMuted;
+        const balanceText = balance > 0.01
+            ? `₹${balance.toFixed(0)}`
+            : balance < -0.01
+                ? `₹${Math.abs(balance).toFixed(0)}`
+                : '—';
+        const balanceLabelText = balance > 0.01
+            ? 'You get'
+            : balance < -0.01
+                ? 'You owe'
+                : 'Settled';
+
+        return (
+            <AppCard
+                style={styles.card}
+                delay={index * 100}
+                onPress={() => router.push(`/group/${item.id}`)}
+            >
+                <View style={styles.cardInner}>
+                    {/* Left: Avatar + Info */}
+                    <View style={styles.cardLeft}>
+                        <View style={styles.groupIconPlaceholder}>
+                            <Text style={styles.groupInitial}>{item.name.charAt(0).toUpperCase()}</Text>
+                        </View>
+                        <View style={styles.groupInfo}>
+                            {/* @ts-ignore */}
+                            <Animated.Text
+                                sharedTransitionTag={`groupName-${item.id}`}
+                                style={[styles.groupName, { color: theme.text }]}
+                            >
+                                {item.name}
+                            </Animated.Text>
+                            <Text style={[styles.memberCount, { color: theme.textSecondary }]}>
+                                {item.member_count || 0} members
+                            </Text>
+                        </View>
                     </View>
-                    <View style={styles.groupInfo}>
-                        {/* @ts-ignore */}
-                        <Animated.Text
-                            sharedTransitionTag={`groupName-${item.id}`}
-                            style={[styles.groupName, { color: theme.text }]}
-                        >
-                            {item.name}
-                        </Animated.Text>
-                        <Text style={[styles.memberCount, { color: theme.textSecondary }]}>
-                            {(item as any).member_count || 0} members
+
+                    {/* Right: Balance badge — real data */}
+                    <View style={styles.balanceContainer}>
+                        <Text style={[styles.balanceAmount, { color: balanceColor }]}>
+                            {balanceText}
+                        </Text>
+                        <Text style={[styles.balanceLabel, { color: theme.textMuted }]}>
+                            {balanceLabelText}
                         </Text>
                     </View>
-                </View>
 
-                {/* Right: Balance badge — bigger, bold */}
-                <View style={styles.balanceContainer}>
-                    <Text style={[styles.balanceAmount, { color: theme.success }]}>
-                        ₹500
-                    </Text>
-                    <Text style={[styles.balanceLabel, { color: theme.textMuted }]}>
-                        You get
-                    </Text>
+                    <Ionicons name="chevron-forward" size={18} color={theme.textMuted} />
                 </View>
-
-                <Ionicons name="chevron-forward" size={18} color={theme.textMuted} />
-            </View>
-        </AppCard>
-    );
+            </AppCard>
+        );
+    };
 
     return (
         <AppContainer>
