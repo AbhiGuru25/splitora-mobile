@@ -28,52 +28,43 @@ export default function Signup() {
     const theme = Colors[colorScheme];
 
     async function signUpWithEmail() {
+        if (!name.trim()) {
+            setError('Please enter your full name.');
+            return;
+        }
         setLoading(true);
         setError(null);
 
         try {
-            // 1. Sign up user
             const { data: { session, user }, error: signUpError } = await supabase.auth.signUp({
-                email,
+                email: email.trim(),
                 password,
                 options: {
                     data: {
-                        full_name: name,
+                        full_name: name.trim(),
                     }
                 }
             });
 
             if (signUpError) {
                 setError(signUpError.message);
-                setLoading(false);
                 return;
             }
 
-            // 2. Create profile immediately after signup
-            if (user) {
-                const { error: profileError } = await supabase
-                    .from('profiles')
-                    .insert({
-                        id: user.id,
-                        email: user.email!,
-                        full_name: name || user.email!.split('@')[0],
-                    });
-
-                if (profileError) {
-                    console.error('Error creating profile:', profileError);
-                    // Don't block signup if profile creation fails
-                }
-
-                // If email confirmation is required
-                if (!session) {
-                    Alert.alert('Check your email', 'Please check your email for the confirmation link.');
-                    router.replace('/(auth)/login');
-                } else {
-                    // User is automatically logged in
-                    Alert.alert('Success', 'Account created successfully!');
-                }
+            if (!user) {
+                setError('Signup failed. Please try again.');
+                return;
             }
 
+            // Profile is auto-created by the handle_new_user DB trigger.
+            // If email confirmation is required, session will be null — go to OTP verify screen.
+            if (!session) {
+                router.replace({
+                    pathname: '/(auth)/verify',
+                    params: { email: email.trim() },
+                });
+            }
+            // If no email confirmation needed, AuthProvider will auto-redirect.
         } catch (err: any) {
             setError(err.message || 'An error occurred during signup');
         } finally {
